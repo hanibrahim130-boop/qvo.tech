@@ -6,6 +6,7 @@ const DESKTOP_MAX_WIDTH = 720
 const DESKTOP_MAX_FRAMES = 48
 const MOBILE_MAX_WIDTH = 540
 const MOBILE_MAX_FRAMES = 32
+const MAX_CANVAS_PIXELS = 2560 * 1440
 
 interface ScrollVideoProps {
   scrollRef: React.RefObject<HTMLDivElement | null>
@@ -164,7 +165,9 @@ export default function ScrollVideo({ scrollRef }: ScrollVideoProps) {
 
     const resizeCanvas = () => {
       const rect = canvas.getBoundingClientRect()
-      const dpr = Math.min(window.devicePixelRatio || 1, 2)
+      const deviceDpr = Math.min(window.devicePixelRatio || 1, 2)
+      const pixelLimitedDpr = Math.sqrt(MAX_CANVAS_PIXELS / Math.max(1, rect.width * rect.height))
+      const dpr = Math.min(deviceDpr, pixelLimitedDpr)
       const backingWidth = Math.max(1, Math.round(rect.width * dpr))
       const backingHeight = Math.max(1, Math.round(rect.height * dpr))
 
