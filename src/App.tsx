@@ -84,7 +84,7 @@ function Navbar() {
         <Reveal delay={0}>
           <div className="flex items-center gap-2">
             <Hexagon size={24} strokeWidth={1.5} className="text-white" />
-            <span className="text-lg sm:text-xl font-medium tracking-tight text-white">novaai</span>
+            <span className="text-lg sm:text-xl font-medium tracking-tight text-white">qvo.tech</span>
           </div>
         </Reveal>
         
@@ -92,14 +92,14 @@ function Navbar() {
         <div className="hidden md:flex items-center gap-8 lg:gap-10">
           <Reveal delay={100}>
             <a href="#" className="text-sm text-white/85 hover:text-white transition-colors duration-300">
-              Projects <sup className="font-mono text-[10px] text-white/60">6</sup>
+              Work <sup className="font-mono text-[10px] text-white/60">6</sup>
             </a>
           </Reveal>
           <Reveal delay={200}>
-            <a href="#" className="text-sm text-white/85 hover:text-white transition-colors duration-300">About</a>
+            <a href="#" className="text-sm text-white/85 hover:text-white transition-colors duration-300">Services</a>
           </Reveal>
           <Reveal delay={300}>
-            <a href="#" className="text-sm text-white/85 hover:text-white transition-colors duration-300">Blog</a>
+            <a href="#" className="text-sm text-white/85 hover:text-white transition-colors duration-300">Studio</a>
           </Reveal>
           <Reveal delay={400}>
             <a href="#" className="text-sm text-white/85 hover:text-white transition-colors duration-300">Contact</a>
@@ -109,7 +109,7 @@ function Navbar() {
         {/* CTA */}
         <Reveal delay={500}>
           <button className="rounded-md border border-white/20 bg-white/15 backdrop-blur-md px-4 py-2 text-xs sm:px-5 sm:text-sm hover:bg-white/25 transition-colors duration-300">
-            Get Free Consultation
+            Start a project
           </button>
         </Reveal>
       </div>
@@ -117,13 +117,13 @@ function Navbar() {
   )
 }
 
-const MITHA_PORTRAIT_URL = 'https://images.higgs.ai/?default=1&output=webp&url=https%3A%2F%2Fd8j0ntlcm91z4.cloudfront.net%2Fuser_38xzZboKViGWJOttwIXH07lWA1P%2Fhf_20260728_050334_5b076e26-0ce7-4898-b432-d764190e448f.png&w=1280&q=85'
+const STUDIO_PORTRAIT_URL = 'https://images.higgs.ai/?default=1&output=webp&url=https%3A%2F%2Fd8j0ntlcm91z4.cloudfront.net%2Fuser_38xzZboKViGWJOttwIXH07lWA1P%2Fhf_20260728_050334_5b076e26-0ce7-4898-b432-d764190e448f.png&w=1280&q=85'
 
 function SectionOne() {
   const services = [
-    '/ AI AUTOMATION',
-    '/ AI INTEGRATION',
-    '/ AI AGENT DEVELOPMENT',
+    '/ WEB DESIGN',
+    '/ WEB DEVELOPMENT',
+    '/ DIGITAL STRATEGY',
   ]
   
   return (
@@ -144,7 +144,7 @@ function SectionOne() {
         {/* Right - Intro */}
         <Reveal delay={300} className="max-w-xs sm:text-right">
           <p className="text-lg sm:text-xl leading-relaxed text-white drop-shadow-md">
-            We design automation that brings clarity, precision, and efficiency to the way your company operates.
+            We create considered digital experiences that make ambitious brands clear, credible, and impossible to ignore.
           </p>
         </Reveal>
       </div>
@@ -156,14 +156,14 @@ function SectionOne() {
           <Reveal delay={150}>
             <div className="border-l-2 border-white bg-white/15 px-3 py-1.5 backdrop-blur-md mb-5">
               <span className="font-mono text-[11px] uppercase tracking-[0.15em] text-white/90">
-                We Automate 100+ Businesses
+                Websites built to perform
               </span>
             </div>
           </Reveal>
           
           <Reveal delay={280}>
             <h1 className="text-5xl sm:text-6xl lg:text-7xl font-normal leading-[1.05] tracking-tight text-white drop-shadow-lg">
-              Clear. Precise.<br />Automated.
+              Design that<br />drives growth.
             </h1>
           </Reveal>
         </div>
@@ -173,16 +173,16 @@ function SectionOne() {
           <div className="flex items-center gap-4 rounded-xl bg-white/15 p-3 backdrop-blur-md">
             <img
               src={MITHA_PORTRAIT_URL}
-              alt="Mitha, co-founder of NovaAI"
+              alt="Qvo.tech studio consultation"
               className="h-24 w-20 rounded-lg object-cover"
             />
             <div className="flex flex-col gap-1.5 pr-2">
-              <span className="text-sm font-medium text-white">Talk with Mitha</span>
+              <span className="text-sm font-medium text-white">Talk with Qvo</span>
               <span className="font-mono text-[10px] uppercase tracking-[0.15em] text-white/60">
-                Co-founder of NovaAI
+                Start your next project
               </span>
               <button className="rounded-full bg-white px-4 py-2 text-xs font-medium text-black hover:bg-white/85 transition-colors duration-300 mt-1.5 flex items-center gap-1">
-                Book 15-mins call
+                Book a call
                 <ChevronRight size={14} />
               </button>
             </div>
@@ -197,18 +197,18 @@ function SectionTwo() {
   const capabilities = [
     {
       index: '01',
-      title: 'Real-time vision',
-      body: 'Reads context as it happens and surfaces what matters before you ask.',
+      title: 'Strategic design',
+      body: 'Turns business goals into a clear, compelling direction for your digital presence.',
     },
     {
       index: '02',
-      title: 'Layered insight',
-      body: 'Moves from rough outline to sharp output without losing the thread.',
+      title: 'Distinctive identity',
+      body: 'Builds visual systems that make the right people recognise and remember your brand.',
     },
     {
       index: '03',
-      title: 'Adaptive speed',
-      body: 'Learns your cadence and tightens every pass as you work.',
+      title: 'Built to scale',
+      body: 'Creates flexible, high-performing websites that grow with the next chapter of your business.',
     },
   ]
   
@@ -220,7 +220,7 @@ function SectionTwo() {
         <Reveal delay={120}>
           <div className="border-l-2 border-white bg-white/15 px-3 py-1.5 backdrop-blur-md">
             <span className="font-mono text-[11px] uppercase tracking-[0.15em] text-white/90">
-              Insight On Demand
+              Design with purpose
             </span>
           </div>
         </Reveal>
@@ -228,7 +228,7 @@ function SectionTwo() {
         {/* Right Copy */}
         <Reveal delay={220} className="max-w-sm sm:text-right">
           <p className="text-lg sm:text-xl leading-relaxed text-white drop-shadow-md">
-            Our AI doesn't just respond — it interprets, sharpens, and delivers the signal you need.
+            We pair bold creative direction with thoughtful technology, so every interaction moves your brand forward.
           </p>
         </Reveal>
       </div>
@@ -239,24 +239,24 @@ function SectionTwo() {
         <div className="max-w-xl">
           <Reveal delay={180}>
             <h2 className="text-5xl sm:text-6xl lg:text-7xl font-normal leading-[1.05] tracking-tight text-white drop-shadow-lg">
-              Learn to see<br />brilliantly.
+              Make your brand<br />matter.
             </h2>
           </Reveal>
           
           <Reveal delay={320}>
             <p className="mt-6 max-w-md text-sm sm:text-base text-white/80 drop-shadow-md">
-              From the first sketch to the final render, Nova turns raw intent into decisions your team can act on — quietly, precisely, at speed.
+              From the first sketch to the final launch, Qvo turns raw ambition into a digital presence your audience can trust and remember.
             </p>
           </Reveal>
           
           <Reveal delay={420}>
             <div className="mt-8 flex flex-wrap gap-3">
               <button className="rounded-full bg-white px-5 py-2.5 text-xs sm:text-sm font-medium text-black hover:bg-white/85 transition-colors duration-300 flex items-center gap-1">
-                Run the demo
+                See our work
                 <ChevronRight size={14} />
               </button>
               <button className="rounded-full border border-white/25 bg-white/10 backdrop-blur-md px-5 py-2.5 text-xs sm:text-sm hover:bg-white/20 transition-colors duration-300">
-                Free consultation
+                Start a project
               </button>
             </div>
           </Reveal>
