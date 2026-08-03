@@ -21,7 +21,7 @@ export default function ScrollVideo({ scrollRef }: ScrollVideoProps) {
   const [videoVisible, setVideoVisible] = useState(true)
   
   const smoothedProgress = useRef<number>(0)
-  const animationFrameId = useRef<number>()
+  const animationFrameId = useRef<number | null>(null)
   const frameExtractionStarted = useRef(false)
   
   // Create offscreen video for frame extraction
