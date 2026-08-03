@@ -254,9 +254,7 @@ export default function ScrollVideo({ scrollRef }: ScrollVideoProps) {
     return () => window.removeEventListener('resize', handleResize)
   }, [])
   
-  return (
-    <>
-      {/* Poster */}
+  return (\n    <div className="fixed inset-0 z-0 overflow-hidden bg-page pointer-events-none">\n      {/* Poster */}
       <img
         ref={posterRef}
         src="https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260729_102822_0e6c87e8-c141-4744-bf32-ad30db296371.mp4"
@@ -281,6 +279,6 @@ export default function ScrollVideo({ scrollRef }: ScrollVideoProps) {
         ref={canvasRef}
         className={`absolute inset-0 w-full h-full transition-opacity duration-500 ${framesReady ? 'opacity-100' : 'opacity-0'}`}
       />
-    </>
+    </div>
   )
 }
