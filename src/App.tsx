@@ -172,7 +172,7 @@ function SectionOne() {
         <Reveal delay={420}>
           <div className="flex items-center gap-4 rounded-xl bg-white/15 p-3 backdrop-blur-md">
             <img
-              src={MITHA_PORTRAIT_URL}
+              src={STUDIO_PORTRAIT_URL}
               alt="Qvo.tech studio consultation"
               className="h-24 w-20 rounded-lg object-cover"
             />
