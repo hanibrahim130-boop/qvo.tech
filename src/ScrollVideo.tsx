@@ -19,6 +19,9 @@ export default function ScrollVideo({ scrollRef }: ScrollVideoProps) {
     const scrollElement = scrollRef.current
     if (!video || !scrollElement) return
 
+    const isTouchDevice = window.matchMedia('(hover: none) and (pointer: coarse)').matches
+    let hasPrimedMobileVideo = false
+
     const stopAnimation = () => {
       if (animationFrameId.current !== null) {
         cancelAnimationFrame(animationFrameId.current)
@@ -71,6 +74,17 @@ export default function ScrollVideo({ scrollRef }: ScrollVideoProps) {
     }
 
     const handleVideoReady = () => {
+      if (isTouchDevice && !hasPrimedMobileVideo) {
+        hasPrimedMobileVideo = true
+        void video.play()
+          .then(() => {
+            video.pause()
+            updateTargetProgress()
+          })
+          .catch(() => {
+            // The poster remains visible if iOS declines to decode until interaction.
+          })
+      }
       updateTargetProgress()
     }
 
@@ -79,6 +93,7 @@ export default function ScrollVideo({ scrollRef }: ScrollVideoProps) {
     video.addEventListener('loadeddata', handleVideoReady)
     video.addEventListener('seeked', scheduleAnimation)
     updateTargetProgress()
+    if (video.readyState >= HTMLMediaElement.HAVE_METADATA) handleVideoReady()
 
     return () => {
       stopAnimation()
@@ -94,6 +109,7 @@ export default function ScrollVideo({ scrollRef }: ScrollVideoProps) {
       <video
         ref={videoRef}
         src={VIDEO_URL}
+        poster="/hero-poster.jpg"
         muted
         playsInline
         preload="auto"
