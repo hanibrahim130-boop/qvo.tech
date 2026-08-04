@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useRef } from 'react'
 
 const VIDEO_URL =
   'https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260729_102822_0e6c87e8-c141-4744-bf32-ad30db296371.mp4'
@@ -13,7 +13,6 @@ export default function ScrollVideo({ scrollRef }: ScrollVideoProps) {
   const targetProgress = useRef(0)
   const smoothedProgress = useRef(0)
   const lastSeekAt = useRef(0)
-  const [videoReady, setVideoReady] = useState(false)
 
   useEffect(() => {
     const video = videoRef.current
@@ -72,7 +71,6 @@ export default function ScrollVideo({ scrollRef }: ScrollVideoProps) {
     }
 
     const handleVideoReady = () => {
-      setVideoReady(true)
       updateTargetProgress()
     }
 
@@ -100,7 +98,7 @@ export default function ScrollVideo({ scrollRef }: ScrollVideoProps) {
         playsInline
         preload="auto"
         disablePictureInPicture
-        className={`absolute inset-0 h-full w-full object-cover transition-opacity duration-500 ${videoReady ? 'opacity-100' : 'opacity-0'}`}
+        className="absolute inset-0 h-full w-full object-cover"
       />
     </div>
   )
