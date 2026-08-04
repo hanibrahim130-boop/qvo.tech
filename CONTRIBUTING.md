@@ -22,12 +22,10 @@ Before opening a pull request:
 npm run build   # type-checks the site and produces a production bundle
 ```
 
-For package work, type-check it on its own:
+For package work, build and type-check it from the workspace root:
 
 ```bash
-cd packages/scroll-scrub-video
-npm install
-npm run typecheck
+npm run build -w scroll-scrub-video
 ```
 
 ## Ways to help

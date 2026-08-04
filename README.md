@@ -68,6 +68,7 @@ Vite prints a local URL (usually `http://localhost:5173`). Open it in your brows
 | --- | --- |
 | `npm run dev` | Start the Vite dev server with hot module replacement |
 | `npm run build` | Type-check with `tsc`, then produce a production bundle in `dist/` |
+| `npm run build -w scroll-scrub-video` | Build the package's ESM, CJS, and declaration files into `packages/scroll-scrub-video/dist/` |
 | `npm run preview` | Serve the built `dist/` folder locally to sanity-check the production build |
 
 ### Deploying
@@ -145,7 +146,7 @@ iOS needs special handling: Safari will not decode a frame for a video that has 
 
 ## Roadmap
 
-- Publish `scroll-scrub-video` to npm with prebuilt ESM/CJS output and type declarations
+- Publish `scroll-scrub-video` to npm
 - Hosted demo page for the package, independent of the QVO site
 - Real work/case-study section with project detail routes
 - A dedicated Studio section to match the existing nav anchor

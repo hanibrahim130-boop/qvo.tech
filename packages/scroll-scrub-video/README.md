@@ -16,7 +16,7 @@ Everything honours `prefers-reduced-motion`.
 npm install scroll-scrub-video
 ```
 
-React 18 or newer is required as a peer dependency. The package ships TypeScript sources and is consumed through the `exports` field, so any modern bundler (Vite, Next.js, Rspack, Parcel) can build it directly.
+React 18 or newer is required as a peer dependency. The package ships prebuilt ESM/CJS artifacts and TypeScript declaration files through the `exports` field.
 
 ## Usage
 
@@ -127,7 +127,6 @@ Returns a `refresh()` function that re-measures scroll position on demand — us
 
 ## Roadmap
 
-- Prebuilt ESM/CJS output with type declarations via `tsup`
 - Canvas-based frame cache option for very heavy footage
 - Image-sequence source as an alternative to video
 - Automated tests and a hosted demo
