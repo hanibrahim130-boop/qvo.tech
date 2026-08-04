@@ -84,9 +84,13 @@ Vite prints a local URL (usually `http://localhost:5173`). Open it in your brows
 
 ```
 .
-├── index.html                       # HTML shell: meta tags, page title, Inter font preconnect
+├── index.html                       # HTML shell: SEO/social meta tags, JSON-LD, Inter font preconnect
 ├── public/
-│   └── hero-poster.jpg              # Poster frame shown before the scroll video is ready
+│   ├── favicon.svg                  # Hexagon favicon matching the navbar logo
+│   ├── hero-poster.jpg              # Poster frame shown before the scroll video is ready
+│   ├── robots.txt                   # Crawler policy, points at the sitemap
+│   ├── sitemap.xml                  # Single-URL sitemap for qvo.tech
+│   └── studio-portrait.webp         # Self-hosted studio consultation image
 ├── src/
 │   ├── main.tsx                     # React entry point, mounts <App /> into #root
 │   ├── App.tsx                      # Page composition: Navbar, SectionOne, SectionTwo, Reveal
@@ -140,7 +144,7 @@ iOS needs special handling: Safari will not decode a frame for a video that has 
 - **Background footage** — swap the video source in `src/ScrollVideo.tsx` and replace `public/hero-poster.jpg` with a matching first frame.
 - **Motion feel** — tune `smoothing` and `seekThrottleMs` on the video layer, and `delay`/`distance`/`duration` on `Reveal`.
 - **Contact address** — the `mailto:` links in `src/App.tsx` point at `hello@qvo.tech`.
-- **Metadata** — page title, favicon, and font loading are in `index.html`.
+- **Metadata** — page title, meta description, favicon, Open Graph/Twitter cards, JSON-LD structured data, and font loading are all in `index.html`. The crawler policy and sitemap live in `public/robots.txt` and `public/sitemap.xml`.
 
 ---
 
@@ -152,7 +156,6 @@ iOS needs special handling: Safari will not decode a frame for a video that has 
 - A dedicated Studio section to match the existing nav anchor
 - Self-host all media in `public/` instead of referencing external CDNs
 - Performance budget: adaptive video quality and lazy-loaded media
-- SEO layer: Open Graph and Twitter cards, JSON-LD structured data, sitemap generation
 
 ---
 
