@@ -82,7 +82,7 @@ export default function ScrollVideo({ scrollRef }: ScrollVideoProps) {
             updateTargetProgress()
           })
           .catch(() => {
-            // The poster remains visible if iOS declines to decode until interaction.
+            // The poster remains visible until iOS has decoded a usable video frame.
           })
       }
       updateTargetProgress()
