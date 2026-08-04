@@ -1,0 +1,53 @@
+{
+  "name": "scroll-scrub-video",
+  "version": "0.1.0",
+  "description": "Scroll-scrubbed background video and reveal-on-scroll primitives for React. Scrolling seeks the video instead of playing it.",
+  "keywords": [
+    "react",
+    "scroll",
+    "scrollytelling",
+    "video",
+    "scrub",
+    "animation",
+    "intersection-observer",
+    "motion"
+  ],
+  "license": "MIT",
+  "author": "QVO (https://qvo.tech)",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/hanibrahim130-boop/qvo.tech.git",
+    "directory": "packages/scroll-scrub-video"
+  },
+  "homepage": "https://github.com/hanibrahim130-boop/qvo.tech/tree/main/packages/scroll-scrub-video",
+  "bugs": {
+    "url": "https://github.com/hanibrahim130-boop/qvo.tech/issues"
+  },
+  "type": "module",
+  "sideEffects": false,
+  "files": [
+    "src",
+    "README.md",
+    "CHANGELOG.md"
+  ],
+  "exports": {
+    ".": {
+      "types": "./src/index.ts",
+      "default": "./src/index.ts"
+    }
+  },
+  "types": "./src/index.ts",
+  "peerDependencies": {
+    "react": ">=18"
+  },
+  "devDependencies": {
+    "@types/react": "^19.2.18",
+    "typescript": "^7.0.2"
+  },
+  "scripts": {
+    "typecheck": "tsc --noEmit"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
+}
