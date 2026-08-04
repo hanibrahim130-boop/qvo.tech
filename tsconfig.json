@@ -11,6 +11,9 @@
     "isolatedModules": true,
     "noEmit": true,
     "jsx": "react-jsx",
+    "paths": {
+      "scroll-scrub-video": ["./packages/scroll-scrub-video/src/index.ts"]
+    },
     "strict": true,
     "noUnusedLocals": false,
     "noUnusedParameters": false,

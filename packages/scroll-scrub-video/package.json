@@ -24,27 +24,35 @@
     "url": "https://github.com/hanibrahim130-boop/qvo.tech/issues"
   },
   "type": "module",
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
   "sideEffects": false,
   "files": [
-    "src",
+    "dist",
     "README.md",
-    "CHANGELOG.md"
+    "CHANGELOG.md",
+    "LICENSE"
   ],
   "exports": {
     ".": {
-      "types": "./src/index.ts",
-      "default": "./src/index.ts"
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs",
+      "default": "./dist/index.js"
     }
   },
-  "types": "./src/index.ts",
   "peerDependencies": {
     "react": ">=18"
   },
   "devDependencies": {
     "@types/react": "^19.2.18",
-    "typescript": "^7.0.2"
+    "tsup": "^8.5.1",
+    "typescript": "^5.7.3"
   },
   "scripts": {
+    "build": "tsup src/index.ts --format esm,cjs --external react --external react-dom --clean && tsc --project tsconfig.build.json",
+    "prepublishOnly": "npm run build",
     "typecheck": "tsc --noEmit"
   },
   "publishConfig": {
