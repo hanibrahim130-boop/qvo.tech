@@ -3,8 +3,7 @@ import { ChevronRight, Hexagon } from 'lucide-react'
 import { Reveal } from 'scroll-scrub-video'
 import ScrollVideo from './ScrollVideo'
 
-const STUDIO_PORTRAIT_URL =
-  'https://images.higgs.ai/?default=1&output=webp&url=https%3A%2F%2Fd8j0ntlcm91z4.cloudfront.net%2Fuser_38xzZboKViGWJOttwIXH07lWA1P%2Fhf_20260728_050334_5b076e26-0ce7-4898-b432-d764190e448f.png&w=1280&q=85'
+const STUDIO_PORTRAIT_URL = '/studio-portrait.webp'
 
 function Navbar() {
   return (
