@@ -1,48 +1,7 @@
-import { useEffect, useRef } from 'react'
+import { useRef } from 'react'
 import { ChevronRight, Hexagon } from 'lucide-react'
+import { Reveal } from 'scroll-scrub-video'
 import ScrollVideo from './ScrollVideo'
-
-interface RevealProps {
-  children: React.ReactNode
-  delay?: number
-  className?: string
-}
-
-function Reveal({ children, delay = 0, className = '' }: RevealProps) {
-  const ref = useRef<HTMLDivElement>(null)
-
-  useEffect(() => {
-    const element = ref.current
-    if (!element) return
-
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            setTimeout(() => {
-              element.classList.remove('translate-y-8', 'opacity-0')
-              element.classList.add('translate-y-0', 'opacity-100')
-            }, delay)
-            observer.unobserve(element)
-          }
-        })
-      },
-      { threshold: 0.15 },
-    )
-
-    observer.observe(element)
-    return () => observer.disconnect()
-  }, [delay])
-
-  return (
-    <div
-      ref={ref}
-      className={`translate-y-8 opacity-0 transition-all duration-700 ease-out will-change-transform ${className}`}
-    >
-      {children}
-    </div>
-  )
-}
 
 const STUDIO_PORTRAIT_URL =
   'https://images.higgs.ai/?default=1&output=webp&url=https%3A%2F%2Fd8j0ntlcm91z4.cloudfront.net%2Fuser_38xzZboKViGWJOttwIXH07lWA1P%2Fhf_20260728_050334_5b076e26-0ce7-4898-b432-d764190e448f.png&w=1280&q=85'

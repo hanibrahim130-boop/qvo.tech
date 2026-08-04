@@ -22,7 +22,4 @@ dist/
 .DS_Store
 Thumbs.db
 
-# Package lock
-package-lock.json
-
 ```
