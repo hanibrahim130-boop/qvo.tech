@@ -2,14 +2,28 @@
 
 **Web design for ambitious brands.** QVO is an open-source, scroll-driven marketing website built with React 19, TypeScript, Vite and Tailwind CSS. The repository holds the full front-end codebase for [qvo.tech](https://qvo.tech): a dark, cinematic single-page experience where a background video scrubs in sync with page scroll while content sections reveal on entry.
 
-It doubles as a reference implementation for high-end motion web design — the scroll-linked video component, reveal-on-scroll primitive, and dark design-token setup are meant to be read, copied, and reused in other projects.
+The motion primitives behind that experience are published from this repository as a standalone, reusable package — see [`packages/scroll-scrub-video`](packages/scroll-scrub-video).
+
+---
+
+## Reusable package: `scroll-scrub-video`
+
+The scroll-scrubbed video layer and the reveal-on-scroll wrapper are framework-agnostic and useful well beyond this site, so they live on their own in [`packages/scroll-scrub-video`](packages/scroll-scrub-video). No Tailwind, no CSS import, no runtime dependency beyond React.
+
+| Export | What it does |
+| --- | --- |
+| `ScrollScrubVideo` | Maps scroll progress onto `video.currentTime` so scrolling seeks the footage instead of playing it. Throttled seeking, poster fallback, iOS decoder priming. |
+| `Reveal` | `IntersectionObserver` wrapper that fades and lifts children into view with a configurable delay, distance, duration and threshold. |
+| `useScrollProgress` | The underlying hook: normalised `0…1` scroll progress with per-frame smoothing, for any element or the window. |
+
+All three honour `prefers-reduced-motion`. Full API reference, usage examples and video-encoding tips are in the [package README](packages/scroll-scrub-video/README.md).
 
 ---
 
 ## Highlights
 
-- **Scroll-synced background video** — `ScrollVideo` maps scroll progress onto video playback time for a continuous, film-like backdrop, with a poster image fallback.
-- **`Reveal` animation primitive** — a small `IntersectionObserver` wrapper that fades and lifts any child element into view with a configurable delay, used to choreograph whole sections.
+- **Scroll-synced background video** — scroll position drives video playback time for a continuous, film-like backdrop, with a poster image fallback.
+- **Staggered reveal choreography** — nav links, service labels, headings and capability rows fade in on entry with increasing delays instead of appearing all at once.
 - **Dark design-token base** — a single `page` color token (`#0a0a0a`) plus an Inter type scale, so the visual language stays consistent across sections.
 - **Glassmorphism UI kit in-place** — translucent, backdrop-blurred cards, pills, and nav built purely with Tailwind utilities. No UI dependency.
 - **Fully responsive** — mobile-first layouts using `100svh`/`100dvh` viewport units so full-height sections behave correctly on mobile browsers.
@@ -69,19 +83,29 @@ Vite prints a local URL (usually `http://localhost:5173`). Open it in your brows
 
 ```
 .
-├── index.html              # HTML shell: meta tags, page title, Inter font preconnect
+├── index.html                       # HTML shell: meta tags, page title, Inter font preconnect
 ├── public/
-│   └── hero-poster.jpg     # Poster frame shown before the scroll video is ready
+│   └── hero-poster.jpg              # Poster frame shown before the scroll video is ready
 ├── src/
-│   ├── main.tsx            # React entry point, mounts <App /> into #root
-│   ├── App.tsx             # Page composition: Navbar, SectionOne, SectionTwo, Reveal primitive
-│   ├── ScrollVideo.tsx     # Scroll-progress-driven background video layer
-│   ├── index.css           # Tailwind directives and global base styles
-│   └── vite-env.d.ts       # Vite ambient type declarations
-├── tailwind.config.cjs     # Design tokens: fonts and the `page` color
-├── postcss.config.cjs      # Tailwind + Autoprefixer pipeline
-├── vite.config.ts          # Vite + React plugin configuration
-├── tsconfig.json           # TypeScript compiler options
+│   ├── main.tsx                     # React entry point, mounts <App /> into #root
+│   ├── App.tsx                      # Page composition: Navbar, SectionOne, SectionTwo, Reveal
+│   ├── ScrollVideo.tsx              # Site-specific wrapper around the scroll video layer
+│   ├── index.css                    # Tailwind directives and global base styles
+│   └── vite-env.d.ts                # Vite ambient type declarations
+├── packages/
+│   └── scroll-scrub-video/          # Standalone, publishable motion primitives
+│       ├── src/
+│       │   ├── ScrollScrubVideo.tsx # Scroll-position-driven video seeking
+│       │   ├── Reveal.tsx           # IntersectionObserver fade-and-lift wrapper
+│       │   ├── useScrollProgress.ts # Smoothed 0…1 scroll progress hook
+│       │   └── index.ts             # Public exports
+│       ├── README.md                # API reference and usage guide
+│       └── CHANGELOG.md
+├── tailwind.config.cjs              # Design tokens: fonts and the `page` color
+├── postcss.config.cjs               # Tailwind + Autoprefixer pipeline
+├── vite.config.ts                   # Vite + React plugin configuration
+├── tsconfig.json                    # TypeScript compiler options
+├── CONTRIBUTING.md                  # How to set up, what to work on, code style
 └── package.json
 ```
 
@@ -91,11 +115,13 @@ Vite prints a local URL (usually `http://localhost:5173`). Open it in your brows
 
 ### Scroll-driven video
 
-`App` owns a scrollable container ref and passes it to `ScrollVideo`, which renders a fixed, full-viewport `<video>` behind the content. As the container scrolls, scroll progress is normalised to `0…1` and mapped onto the video's `currentTime`, so scrolling scrubs the footage instead of merely playing it. `public/hero-poster.jpg` is used as the poster so the first paint is never blank.
+`App` owns a scrollable container ref and passes it down to the video layer, which renders a fixed, full-viewport `<video>` behind the content. As the container scrolls, scroll progress is normalised to `0…1` and mapped onto the video's `currentTime`, so scrolling scrubs the footage instead of merely playing it. Seeks are throttled and smoothed per frame, and `public/hero-poster.jpg` is used as the poster so the first paint is never blank.
+
+iOS needs special handling: Safari will not decode a frame for a video that has never played, so a single muted play/pause cycle primes the decoder before seeking begins.
 
 ### Reveal on scroll
 
-`Reveal` wraps any node, starts it at `translate-y-8 opacity-0`, and swaps in `translate-y-0 opacity-100` once an `IntersectionObserver` reports at least 15% visibility. Each instance takes a `delay` prop, which is how the nav links, service labels, headings, and capability rows stagger into place instead of appearing all at once.
+`Reveal` wraps any node, starts it faded out and offset downward, and animates it into place once an `IntersectionObserver` reports at least 15% visibility. Each instance takes a `delay` prop, which is how whole sections stagger into view.
 
 ### Page sections
 
@@ -111,6 +137,7 @@ Vite prints a local URL (usually `http://localhost:5173`). Open it in your brows
 - **Colors and type** — edit `theme.extend` in `tailwind.config.cjs`. The `page` color and Inter font stack are the two knobs that set the overall mood.
 - **Copy and sections** — all text lives inline in `src/App.tsx`. Service labels and capability entries are plain arrays near the top of their components.
 - **Background footage** — swap the video source in `src/ScrollVideo.tsx` and replace `public/hero-poster.jpg` with a matching first frame.
+- **Motion feel** — tune `smoothing` and `seekThrottleMs` on the video layer, and `delay`/`distance`/`duration` on `Reveal`.
 - **Contact address** — the `mailto:` links in `src/App.tsx` point at `hello@qvo.tech`.
 - **Metadata** — page title, favicon, and font loading are in `index.html`.
 
@@ -118,10 +145,11 @@ Vite prints a local URL (usually `http://localhost:5173`). Open it in your brows
 
 ## Roadmap
 
-- Extract `Reveal` and `ScrollVideo` into a standalone, publishable motion-primitives package
+- Publish `scroll-scrub-video` to npm with prebuilt ESM/CJS output and type declarations
+- Hosted demo page for the package, independent of the QVO site
 - Real work/case-study section with project detail routes
 - A dedicated Studio section to match the existing nav anchor
-- Accessibility pass, including `prefers-reduced-motion` handling for the scroll video and reveals
+- Self-host all media in `public/` instead of referencing external CDNs
 - Performance budget: adaptive video quality and lazy-loaded media
 - SEO layer: Open Graph and Twitter cards, JSON-LD structured data, sitemap generation
 
@@ -129,20 +157,15 @@ Vite prints a local URL (usually `http://localhost:5173`). Open it in your brows
 
 ## Contributing
 
-Issues and pull requests are welcome.
+Issues and pull requests are welcome. See [CONTRIBUTING.md](CONTRIBUTING.md) for setup, the kinds of help that are most useful, code style, and pull request expectations.
 
-1. Fork the repository and create a branch: `git checkout -b feat/your-change`
-2. Run `npm run dev` and verify your change visually at mobile, tablet, and desktop widths
-3. Run `npm run build` to confirm the project type-checks and builds cleanly
-4. Open a pull request describing what changed and why, with before/after screenshots or a short screen recording for anything visual
-
-Please keep changes focused, prefer Tailwind utilities over new CSS files, and avoid adding runtime dependencies unless there is no reasonable alternative.
+Good first areas: accessibility passes, mobile browser quirks, performance on low-end devices, documentation, and features from the package roadmap.
 
 ---
 
 ## License
 
-MIT — see `LICENSE` for details.
+MIT — see [LICENSE](LICENSE) for details.
 
 ---
 
