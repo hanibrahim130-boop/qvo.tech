@@ -1,6 +1,6 @@
 # QVO — qvo.tech
 
-**Web design for ambitious brands.** QVO is an open-source, scroll-driven marketing website built with React 19, TypeScript, Vite and Tailwind CSS. The repository holds the full front-end codebase for [qvo.tech](https://qvo.tech): a dark, cinematic single-page experience where a background video scrubs in sync with page scroll while content sections reveal on entry.
+**Web design for ambitious brands.** QVO is an open-source, scroll-driven marketing website built with React 19, TypeScript, Vite and Tailwind CSS. The repository holds the full front-end codebase for [qvo.tech](https://qvo.tech): a dark, cinematic single-page experience with a generative WebGL hero, a scroll-scrubbed showreel, smooth scrolling, and GSAP-driven scroll choreography from the preloader to the footer.
 
 The motion primitives behind that experience are published from this repository as a standalone, reusable package — see [`packages/scroll-scrub-video`](packages/scroll-scrub-video).
 
@@ -22,12 +22,12 @@ All three honour `prefers-reduced-motion`. Full API reference, usage examples an
 
 ## Highlights
 
-- **Scroll-synced background video** — scroll position drives video playback time for a continuous, film-like backdrop, with a poster image fallback.
-- **Staggered reveal choreography** — nav links, service labels, headings and capability rows fade in on entry with increasing delays instead of appearing all at once.
-- **Dark design-token base** — a single `page` color token (`#0a0a0a`) plus an Inter type scale, so the visual language stays consistent across sections.
-- **Glassmorphism UI kit in-place** — translucent, backdrop-blurred cards, pills, and nav built purely with Tailwind utilities. No UI dependency.
-- **Fully responsive** — mobile-first layouts using `100svh`/`100dvh` viewport units so full-height sections behave correctly on mobile browsers.
-- **Tiny dependency surface** — React, React DOM and `lucide-react` icons. Nothing else at runtime.
+- **Generative 3D hero** — a noise-displaced, faceted Three.js orb with an electric rim light, particle field and wireframe shell; it reacts to the pointer and the first viewport of scroll, pauses off-screen, and is lazy-loaded in its own chunk.
+- **Scroll-scrubbed showreel** — a pinned, full-viewport video whose playhead is driven by scroll, the technique extracted into the `scroll-scrub-video` package.
+- **Scroll choreography throughout** — masked split-text headlines, a word-by-word brightening studio statement, animated stat counters, thumbnail parallax and a horizontally-scrolling process section, all on GSAP ScrollTrigger + Lenis smooth scroll.
+- **Micro-interactions** — branded preloader, custom blend-mode cursor, magnetic buttons, hide-on-scroll navbar with a full-screen staggered mobile menu, infinite marquee.
+- **Dark design-token base** — the `page` color (`#0a0a0a`) and `accent` (`#D9FF3F`) tokens, Space Grotesk display type with Instrument Serif italic accents over an Inter body.
+- **Accessible by default** — every effect degrades under `prefers-reduced-motion`: no smooth scroll or pinning, a static 3D frame, final counter values, and full content with no JS-gated visibility.
 
 ---
 
@@ -39,8 +39,11 @@ All three honour `prefers-reduced-motion`. Full API reference, usage examples an
 | Language | TypeScript |
 | Build tool | Vite |
 | Styling | Tailwind CSS 3 + PostCSS / Autoprefixer |
+| 3D | Three.js (vanilla, lazy-loaded) |
+| Animation | GSAP 3 + ScrollTrigger |
+| Smooth scroll | Lenis |
 | Icons | lucide-react |
-| Fonts | Inter (Google Fonts) |
+| Fonts | Space Grotesk, Instrument Serif, Inter (Google Fonts) |
 
 ---
 
@@ -93,10 +96,31 @@ Vite prints a local URL (usually `http://localhost:5173`). Open it in your brows
 │   └── studio-portrait.webp         # Self-hosted studio consultation image
 ├── src/
 │   ├── main.tsx                     # React entry point, mounts <App /> into #root
-│   ├── App.tsx                      # Page composition: Navbar, SectionOne, SectionTwo, Reveal
-│   ├── ScrollVideo.tsx              # Site-specific wrapper around the scroll video layer
-│   ├── index.css                    # Tailwind directives and global base styles
-│   └── vite-env.d.ts                # Vite ambient type declarations
+│   ├── App.tsx                      # Page composition, preloader gate, Lenis boot
+│   ├── index.css                    # Tailwind layers, tokens, split-text/cursor/noise utilities
+│   ├── vite-env.d.ts                # Vite ambient type declarations
+│   ├── lib/
+│   │   ├── gsap.ts                  # GSAP + ScrollTrigger registration, context hook
+│   │   ├── useLenis.ts              # Lenis ↔ GSAP ticker wiring, scrollTo helper
+│   │   ├── splitText.ts             # Dependency-free word/line splitter for masked reveals
+│   │   ├── anchors.ts               # Smooth same-page anchor navigation
+│   │   └── usePrefersReducedMotion.ts
+│   └── components/
+│       ├── Preloader.tsx            # Branded counter intro that gates the hero
+│       ├── Cursor.tsx               # Custom blend-mode cursor (fine pointers only)
+│       ├── Navbar.tsx               # Hide-on-scroll nav + full-screen mobile menu
+│       ├── Hero.tsx                 # Split-line headline intro, CTAs, scroll dim
+│       ├── Hero3D.tsx               # Lazy Three.js scene (orb, particles, shaders)
+│       ├── Marquee.tsx              # Infinite service marquee
+│       ├── Showreel.tsx             # Pinned scroll-scrubbed video section
+│       ├── Work.tsx                 # Case studies (placeholder content, gradient art)
+│       ├── Services.tsx             # Sticky intro + capability rows
+│       ├── Process.tsx              # Horizontal-scroll process (stacks on mobile)
+│       ├── Studio.tsx               # Statement scrub, stat counters, testimonials
+│       ├── Contact.tsx              # Giant split-reveal CTA
+│       ├── Footer.tsx               # Nav, package credit, back-to-top
+│       ├── Magnetic.tsx             # Pointer-gravity wrapper for buttons
+│       └── SectionHead.tsx          # Shared section opener
 ├── packages/
 │   └── scroll-scrub-video/          # Standalone, publishable motion primitives
 │       ├── src/
@@ -118,32 +142,44 @@ Vite prints a local URL (usually `http://localhost:5173`). Open it in your brows
 
 ## How it works
 
-### Scroll-driven video
+### The motion system
 
-`App` owns a scrollable container ref and passes it down to the video layer, which renders a fixed, full-viewport `<video>` behind the content. As the container scrolls, scroll progress is normalised to `0…1` and mapped onto the video's `currentTime`, so scrolling scrubs the footage instead of merely playing it. Seeks are throttled and smoothed per frame, and `public/hero-poster.jpg` is used as the poster so the first paint is never blank.
+Lenis animates the window's real scroll position from the GSAP ticker, so native scroll events, CSS `sticky` and ScrollTrigger all stay in sync. Every scroll effect is a ScrollTrigger — scrubbed (showreel seek, statement brighten, parallax, horizontal process) or one-shot (split-text reveals, counters). `src/lib/gsap.ts` exposes a `useGsapContext` hook that scopes and reverts animations per component.
 
-iOS needs special handling: Safari will not decode a frame for a video that has never played, so a single muted play/pause cycle primes the decoder before seeking begins.
+### The 3D hero
+
+`Hero3D.tsx` is a vanilla Three.js scene in a `React.lazy` chunk: an icosahedron displaced by simplex noise in the vertex shader, shaded flat with screen-space derivative normals, a fresnel rim in the accent color, plus particle dust and a slow wireframe shell. It lerps toward the pointer, scales with the first viewport of scroll, clamps device-pixel ratio, pauses when off-screen or the tab is hidden, and renders a single static frame under reduced motion. A CSS radial gradient sits underneath as the loading and no-WebGL fallback.
+
+### The showreel
+
+A `280vh` section with a `position: sticky` viewport. A ScrollTrigger maps section progress onto the video's `currentTime` with the same throttle/min-delta/tail-trim tuning as the `scroll-scrub-video` package, including the iOS decoder-priming trick. Under reduced motion the video is replaced by the poster still.
 
 ### Reveal on scroll
 
-`Reveal` wraps any node, starts it faded out and offset downward, and animates it into place once an `IntersectionObserver` reports at least 15% visibility. Each instance takes a `delay` prop, which is how whole sections stagger into view.
+Simple entrances still use the package's `Reveal` (`IntersectionObserver` fade-and-lift). The fancier text work — masked line reveals and the word-by-word statement — uses `src/lib/splitText.ts`, a dependency-free splitter that restores the original markup once each animation completes.
 
 ### Page sections
 
-- **Navbar** — fixed, translucent top bar with anchor links to `#work`, `#services`, `#studio`, `#contact` and a primary "Start a project" action.
-- **SectionOne (`#services`)** — service list, positioning statement, the `Design that drives growth.` headline, and a contact card linking to `mailto:hello@qvo.tech`.
-- **SectionTwo (`#work`)** — the `Make your brand matter.` headline plus a three-item capability list (strategic design, distinctive identity, built to scale) in a glass card.
-- A tall spacer sits between the two sections to give the scroll-linked video room to play through.
+- **Preloader** — branded counter; the hero intro starts as the curtain lifts.
+- **Hero** — WebGL orb, split-line `Design that drives growth.` headline, magnetic CTAs.
+- **Showreel** — pinned scroll-scrubbed film.
+- **Work (`#work`)** — four case studies (placeholder copy, generated gradient art) with hover states and thumbnail parallax.
+- **Services (`#services`)** — sticky intro column beside three capability rows with deliverable tags.
+- **Process** — horizontal scroll through Discover / Design / Build / Launch on desktop; a vertical stack on mobile and under reduced motion.
+- **Studio (`#studio`)** — brightening statement, animated stats, portrait card, testimonials.
+- **Contact (`#contact`)** — giant split-reveal CTA with a magnetic “Book a call” button.
+- **Footer** — sitemap, package credit, outline watermark, back-to-top.
 
 ---
 
 ## Customising
 
-- **Colors and type** — edit `theme.extend` in `tailwind.config.cjs`. The `page` color and Inter font stack are the two knobs that set the overall mood.
-- **Copy and sections** — all text lives inline in `src/App.tsx`. Service labels and capability entries are plain arrays near the top of their components.
-- **Background footage** — swap the video source in `src/ScrollVideo.tsx` and replace `public/hero-poster.jpg` with a matching first frame.
-- **Motion feel** — tune `smoothing` and `seekThrottleMs` on the video layer, and `delay`/`distance`/`duration` on `Reveal`.
-- **Contact address** — the `mailto:` links in `src/App.tsx` point at `hello@qvo.tech`.
+- **Colors and type** — edit `theme.extend` in `tailwind.config.cjs`: the `page` and `accent` colors plus the display/serif/body font stacks set the whole mood.
+- **Copy and sections** — each section owns its content as plain arrays/strings at the top of its file: case studies in `src/components/Work.tsx`, services in `Services.tsx`, process steps in `Process.tsx`, stats/quotes/statement in `Studio.tsx`, marquee items in `App.tsx`. The case studies and testimonials ship as clearly-marked placeholders — swap them for real work.
+- **Showreel footage** — swap `VIDEO_URL` in `src/components/Showreel.tsx` and replace `public/hero-poster.jpg` with a matching first frame.
+- **3D scene** — tune `uAmp`/`uFreq` (displacement), colors, particle counts and rotation speeds in `src/components/Hero3D.tsx`.
+- **Motion feel** — Lenis `duration`/easing in `src/lib/useLenis.ts`; per-effect ScrollTrigger ranges live beside each component.
+- **Contact address** — the `mailto:` links point at `hello@qvo.tech`.
 - **Metadata** — page title, meta description, favicon, Open Graph/Twitter cards, JSON-LD structured data, and font loading are all in `index.html`. The crawler policy and sitemap live in `public/robots.txt` and `public/sitemap.xml`.
 
 ---
@@ -152,8 +188,7 @@ iOS needs special handling: Safari will not decode a frame for a video that has 
 
 - Publish `scroll-scrub-video` to npm
 - Hosted demo page for the package, independent of the QVO site
-- Real work/case-study section with project detail routes
-- A dedicated Studio section to match the existing nav anchor
+- Replace placeholder case studies with real work and add project detail routes
 - Self-host all media in `public/` instead of referencing external CDNs
 - Performance budget: adaptive video quality and lazy-loaded media
 
