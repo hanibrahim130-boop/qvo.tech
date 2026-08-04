@@ -8,6 +8,7 @@
   background: #0a0a0a;
   font-synthesis: none;
   text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
 }
 
 * {
@@ -25,4 +26,104 @@ body,
 body {
   min-height: 100vh;
   background: #0a0a0a;
+  overflow-x: clip;
+}
+
+/* Scroll is locked while the preloader or the mobile menu is on screen. */
+html.is-loading,
+html.menu-open {
+  overflow: hidden;
+}
+
+::selection {
+  background: #d9ff3f;
+  color: #0a0a0a;
+}
+
+::-webkit-scrollbar {
+  width: 10px;
+}
+::-webkit-scrollbar-track {
+  background: #0a0a0a;
+}
+::-webkit-scrollbar-thumb {
+  background: #2a2a2e;
+  border-radius: 8px;
+  border: 2px solid #0a0a0a;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #3a3a40;
+}
+
+:focus-visible {
+  outline: 2px solid #d9ff3f;
+  outline-offset: 3px;
+  border-radius: 2px;
+}
+
+/* Recommended Lenis smooth-scroll styles. */
+html.lenis,
+html.lenis body {
+  height: auto;
+}
+.lenis.lenis-smooth {
+  scroll-behavior: auto !important;
+}
+.lenis.lenis-smooth [data-lenis-prevent] {
+  overscroll-behavior: contain;
+}
+.lenis.lenis-stopped {
+  overflow: hidden;
+}
+
+/* Filmic grain laid over the whole page. */
+.noise-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 90;
+  pointer-events: none;
+  opacity: 0.05;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  background-size: 180px 180px;
+}
+
+/* Big hollow display type. */
+.text-outline {
+  color: transparent;
+  -webkit-text-stroke: 1px rgba(255, 255, 255, 0.22);
+}
+
+/* Split-text helpers: lines act as masks, words slide inside them. */
+.split-line {
+  display: block;
+  overflow: hidden;
+}
+.split-word {
+  display: inline-block;
+  will-change: transform;
+}
+
+/* Navbar once the page has been scrolled. */
+.nav-scrolled {
+  background: rgba(10, 10, 10, 0.6);
+  border-color: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+}
+
+/* The custom cursor replaces the native one on precise pointers only. */
+@media (pointer: fine) {
+  html.has-custom-cursor,
+  html.has-custom-cursor * {
+    cursor: none !important;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-marquee {
+    animation: none;
+  }
+  html {
+    scroll-behavior: auto;
+  }
 }
