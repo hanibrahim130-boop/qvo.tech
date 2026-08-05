@@ -8,6 +8,10 @@ import SectionHead from './SectionHead'
 /**
  * Placeholder case studies — swap for real projects as they ship. The
  * thumbnails are generated gradient art so the repo needs no image assets.
+ *
+ * All four sit on one violet ramp: four depths of the same family, not four
+ * hues. Four unrelated colours here was the loudest palette break on the page,
+ * and it fought the global backdrop behind them.
  */
 const CASES = [
   {
@@ -17,7 +21,7 @@ const CASES = [
     title: 'A flagship digital boutique for a Swiss micro-brand',
     result: '+212% online revenue in one quarter',
     monogram: 'A',
-    art: 'radial-gradient(120% 140% at 20% 10%, #2c3818 0%, #11130a 45%, #0a0a0a 100%)',
+    art: 'radial-gradient(120% 140% at 20% 10%, #3A2A63 0%, #1A1428 45%, #0C0C0C 100%)',
   },
   {
     client: 'Nimbus Analytics',
@@ -26,7 +30,7 @@ const CASES = [
     title: 'Turning a dense data platform into a clear story',
     result: '2.4× demo requests after relaunch',
     monogram: 'N',
-    art: 'radial-gradient(130% 120% at 80% 15%, #1b2a33 0%, #0d1216 50%, #0a0a0a 100%)',
+    art: 'radial-gradient(130% 120% at 80% 15%, #2E2352 0%, #171126 50%, #0C0C0C 100%)',
   },
   {
     client: 'Studio Form',
@@ -35,7 +39,7 @@ const CASES = [
     title: 'A portfolio as considered as the buildings',
     result: 'Shortlisted, Awwwards SOTD',
     monogram: 'F',
-    art: 'radial-gradient(120% 130% at 30% 85%, #33241b 0%, #16100c 50%, #0a0a0a 100%)',
+    art: 'radial-gradient(120% 130% at 30% 85%, #473472 0%, #1D1630 50%, #0C0C0C 100%)',
   },
   {
     client: 'Volta Mobility',
@@ -44,7 +48,7 @@ const CASES = [
     title: 'Launching an EV startup with cinematic 3D',
     result: '38k waitlist signups at launch',
     monogram: 'V',
-    art: 'radial-gradient(140% 120% at 75% 80%, #24182e 0%, #100b14 50%, #0a0a0a 100%)',
+    art: 'radial-gradient(140% 120% at 75% 80%, #251C45 0%, #130F21 50%, #0C0C0C 100%)',
   },
 ]
 
