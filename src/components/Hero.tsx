@@ -61,7 +61,7 @@ export default function Hero({ started }: HeroProps) {
     }
   }, [started, reduced])
 
-  // Content recedes as the visitor scrolls into the showreel.
+  // Content recedes as the visitor scrolls out of the hero.
   useGsapContext(
     () => {
       if (reduced) return
@@ -88,15 +88,11 @@ export default function Hero({ started }: HeroProps) {
       className="relative flex h-[100svh] min-h-[640px] flex-col overflow-hidden"
     >
       {/*
-        No local backdrop: GlobalBackdrop paints this section, which is how the
-        hero and the rest of the page finally share one light source. All that
-        is left here is the floor fade into the showreel.
+        No local backdrop and no floor fade. GlobalBackdrop paints this section
+        and every section after it, so the film runs through unbroken. The
+        gradient that used to sit here faded the hero into the showreel; with
+        that section gone it only laid an opaque band over the video.
       */}
-      <div
-        aria-hidden="true"
-        className="pointer-events-none absolute inset-x-0 bottom-0 h-40 bg-gradient-to-b from-transparent to-page"
-      />
-
       <div
         ref={contentRef}
         className="relative z-10 flex flex-1 flex-col justify-end px-5 pb-8 pt-28 sm:px-8 md:px-12"

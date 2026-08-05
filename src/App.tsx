@@ -9,7 +9,6 @@ import Navbar from './components/Navbar'
 import Preloader from './components/Preloader'
 import Process from './components/Process'
 import Services from './components/Services'
-import Showreel from './components/Showreel'
 import Studio from './components/Studio'
 import Work from './components/Work'
 import { ScrollTrigger } from './lib/gsap'
@@ -53,7 +52,6 @@ export default function App() {
         <main>
           <Hero started={started} />
           <Marquee items={MARQUEE_ITEMS} />
-          <Showreel />
           <Work />
           <Services />
           <Process />
