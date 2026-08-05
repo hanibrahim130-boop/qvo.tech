@@ -2,13 +2,13 @@ import { useEffect, useState } from 'react'
 import Contact from './components/Contact'
 import Cursor from './components/Cursor'
 import Footer from './components/Footer'
+import GlobalBackdrop from './components/GlobalBackdrop'
 import Hero from './components/Hero'
 import Marquee from './components/Marquee'
 import Navbar from './components/Navbar'
 import Preloader from './components/Preloader'
 import Process from './components/Process'
 import Services from './components/Services'
-import Showreel from './components/Showreel'
 import Studio from './components/Studio'
 import Work from './components/Work'
 import { ScrollTrigger } from './lib/gsap'
@@ -44,19 +44,22 @@ export default function App() {
     <>
       <Preloader onComplete={() => setStarted(true)} />
       <Cursor />
+      {/* One film behind every section. Sits at z-0; the page rides above it. */}
+      <GlobalBackdrop />
       <div className="noise-overlay" aria-hidden="true" />
       <Navbar />
-      <main>
-        <Hero started={started} />
-        <Marquee items={MARQUEE_ITEMS} />
-        <Showreel />
-        <Work />
-        <Services />
-        <Process />
-        <Studio />
-        <Contact />
-      </main>
-      <Footer />
+      <div className="relative z-10">
+        <main>
+          <Hero started={started} />
+          <Marquee items={MARQUEE_ITEMS} />
+          <Work />
+          <Services />
+          <Process />
+          <Studio />
+          <Contact />
+        </main>
+        <Footer />
+      </div>
     </>
   )
 }

@@ -1,4 +1,4 @@
-import { Suspense, lazy, useEffect, useRef } from 'react'
+import { useEffect, useRef } from 'react'
 import { ArrowDown, ArrowUpRight } from 'lucide-react'
 import { gsap, useGsapContext } from '../lib/gsap'
 import { splitLines } from '../lib/splitText'
@@ -6,8 +6,6 @@ import type { SplitResult } from '../lib/splitText'
 import { usePrefersReducedMotion } from '../lib/usePrefersReducedMotion'
 import { onAnchorClick } from '../lib/anchors'
 import Magnetic from './Magnetic'
-
-const Hero3D = lazy(() => import('./Hero3D'))
 
 interface HeroProps {
   /** Flips to true as the preloader lifts; starts the intro timeline. */
@@ -63,7 +61,7 @@ export default function Hero({ started }: HeroProps) {
     }
   }, [started, reduced])
 
-  // Content recedes as the visitor scrolls into the showreel.
+  // Content recedes as the visitor scrolls out of the hero.
   useGsapContext(
     () => {
       if (reduced) return
@@ -89,15 +87,12 @@ export default function Hero({ started }: HeroProps) {
       id="top"
       className="relative flex h-[100svh] min-h-[640px] flex-col overflow-hidden"
     >
-      {/* Backdrop: CSS gradient always, WebGL scene layered on when it loads. */}
-      <div className="absolute inset-0" aria-hidden="true">
-        <div className="absolute inset-0 bg-[radial-gradient(110%_85%_at_72%_25%,#17171b_0%,#0a0a0a_62%)]" />
-        <Suspense fallback={null}>
-          <Hero3D className="absolute inset-0" />
-        </Suspense>
-        <div className="absolute inset-x-0 bottom-0 h-40 bg-gradient-to-b from-transparent to-page" />
-      </div>
-
+      {/*
+        No local backdrop and no floor fade. GlobalBackdrop paints this section
+        and every section after it, so the film runs through unbroken. The
+        gradient that used to sit here faded the hero into the showreel; with
+        that section gone it only laid an opaque band over the video.
+      */}
       <div
         ref={contentRef}
         className="relative z-10 flex flex-1 flex-col justify-end px-5 pb-8 pt-28 sm:px-8 md:px-12"
@@ -129,7 +124,7 @@ export default function Hero({ started }: HeroProps) {
               <Magnetic>
                 <a
                   href="mailto:hello@qvo.tech"
-                  className="inline-flex items-center gap-2 rounded-full bg-accent px-7 py-3.5 text-sm font-medium text-black transition-colors duration-300 hover:bg-white"
+                  className="inline-flex items-center gap-2 rounded-full bg-lavender px-7 py-3.5 text-sm font-medium text-page transition-colors duration-300 hover:bg-white"
                 >
                   Start a project
                   <ArrowUpRight size={16} />

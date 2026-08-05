@@ -5,7 +5,7 @@
 :root {
   font-family: Inter, system-ui, sans-serif;
   color: #fff;
-  background: #0a0a0a;
+  background: #0c0c0c;
   font-synthesis: none;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
@@ -25,7 +25,7 @@ body,
 
 body {
   min-height: 100vh;
-  background: #0a0a0a;
+  background: #0c0c0c;
   overflow-x: clip;
 }
 
@@ -36,27 +36,27 @@ html.menu-open {
 }
 
 ::selection {
-  background: #d9ff3f;
-  color: #0a0a0a;
+  background: #8b6fe8;
+  color: #0c0c0c;
 }
 
 ::-webkit-scrollbar {
   width: 10px;
 }
 ::-webkit-scrollbar-track {
-  background: #0a0a0a;
+  background: #0c0c0c;
 }
 ::-webkit-scrollbar-thumb {
-  background: #2a2a2e;
+  background: #2a2632;
   border-radius: 8px;
-  border: 2px solid #0a0a0a;
+  border: 2px solid #0c0c0c;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: #3a3a40;
+  background: #3b3448;
 }
 
 :focus-visible {
-  outline: 2px solid #d9ff3f;
+  outline: 2px solid #8b6fe8;
   outline-offset: 3px;
   border-radius: 2px;
 }
@@ -76,7 +76,7 @@ html.lenis body {
   overflow: hidden;
 }
 
-/* Filmic grain laid over the whole page. */
+/* Filmic grain laid over the whole page, above the backdrop and the content. */
 .noise-overlay {
   position: fixed;
   inset: 0;
@@ -105,7 +105,7 @@ html.lenis body {
 
 /* Navbar once the page has been scrolled. */
 .nav-scrolled {
-  background: rgba(10, 10, 10, 0.6);
+  background: rgba(12, 12, 12, 0.6);
   border-color: rgba(255, 255, 255, 0.1);
   backdrop-filter: blur(14px);
   -webkit-backdrop-filter: blur(14px);

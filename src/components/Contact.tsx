@@ -42,10 +42,10 @@ export default function Contact() {
       ref={sectionRef}
       className="relative overflow-hidden border-t border-white/10 px-5 py-32 text-center sm:px-8 md:px-12 md:py-44"
     >
-      <div
-        aria-hidden="true"
-        className="pointer-events-none absolute inset-0 bg-[radial-gradient(60%_50%_at_50%_60%,rgba(217,255,63,0.06)_0%,transparent_70%)]"
-      />
+      {/*
+        The local glow is gone. This is the brightest chapter of the global
+        backdrop, so the bloom behind this section is the film itself.
+      */}
 
       <Reveal>
         <p className="font-mono text-[11px] uppercase tracking-[0.25em] text-white/50">
@@ -65,7 +65,7 @@ export default function Contact() {
           <Magnetic strength={0.4}>
             <a
               href="mailto:hello@qvo.tech"
-              className="inline-flex items-center gap-2.5 rounded-full bg-accent px-9 py-4 text-base font-medium text-black transition-colors duration-300 hover:bg-white sm:px-10 sm:py-5"
+              className="inline-flex items-center gap-2.5 rounded-full bg-lavender px-9 py-4 text-base font-medium text-page transition-colors duration-300 hover:bg-white sm:px-10 sm:py-5"
             >
               Book a call
               <ArrowUpRight size={18} />
