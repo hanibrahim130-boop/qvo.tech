@@ -1,86 +1,92 @@
 # Global backdrop
 
-One continuous, scroll-driven film behind the whole site.
+One video sits behind the whole site and is scrubbed by scroll position, so
+the page reads as a single continuous shot instead of a stack of unrelated
+section backgrounds.
 
-It exists to fix a specific problem: the page used to carry six unrelated
-background treatments (a hero CSS gradient, a WebGL orb that died after one
-viewport, an opaque pinned showreel, four case-study cards in four unrelated
-hues, a lime contact glow, and a lime accent token). Each one was fine alone.
-Together they read as six themes, which is the single loudest "cheap" signal a
-site can send.
+`src/components/GlobalBackdrop.tsx` is the only implementation. There is no
+canvas, no procedural drawing and no image-sequence player.
 
-## Architecture
+## How it works
 
-- `src/components/GlobalBackdrop.tsx` mounts one `<canvas>` at
-  `fixed inset-0 z-0`. Everything else lives in a `relative z-10` wrapper.
-  Existing layers are untouched: noise overlay 90, navbar 50, mobile menu 40,
-  cursor 200/210, preloader 300.
-- One master ScrollTrigger publishes progress. There is deliberately no second
-  scroll listener: `useLenis` already calls `ScrollTrigger.update()` on every
-  Lenis scroll and drives `gsap.ticker`, so a second system would desync.
-- Progress is eased toward its target every frame (`EASE = 0.12`). The film
-  keeps moving for a beat after the wheel stops. That lag is what reads as
-  expensive.
-- `src/lib/proceduralBackdrop.ts` holds the art direction and draws it in
-  canvas 2D. Zero asset bytes, correct on first paint.
-- `src/lib/frameSequence.ts` scrubs a rendered image sequence instead, but only
-  if `/backdrop/manifest.json` exists.
-- `src/lib/backdropProgress.ts` is a 30-line store so other components can read
-  the film's position without their own listener.
+- A `<video>` is fixed at `inset-0 z-0`, `object-cover`, muted, never played.
+- One master `ScrollTrigger` spans `document.documentElement` and reports
+  progress from 0 to 1.
+- A `requestAnimationFrame` loop eases a rendered value toward that progress
+  (`EASE = 0.1`) and maps it onto `video.currentTime`. The easing is why the
+  film feels heavy instead of glued to the wheel.
+- Seeks are throttled to one per ~33ms and sub-frame seeks are dropped, so a
+  fast flick does not queue up hundreds of decodes.
+- Progress is published through `src/lib/backdropProgress.ts` so anything else
+  can read the film's position without adding a second scroll listener.
+  Lenis already drives `ScrollTrigger.update()`, and two scroll systems fight.
+- `prefers-reduced-motion: reduce` paints one still frame and never starts the
+  loop.
 
-## Chapters
+## The clip
 
-Eight beats of one camera move, not eight effects.
+Source: Pexels video 33357978, "Abstract Purple and Blue Fluid Motion
+<br>Background" — 1920x1080, 30fps, 10s.
 
-| # | Chapter | Anchor | Intent |
-|---|---------|--------|--------|
-| 1 | hero | `#top` | Brightest close-up, bloom high right behind the headline |
-| 2 | showreel | `section[aria-label="Showreel"]` | Pressed near-black (scrim 0.62) so the opaque video reads as a deliberate cut |
-| 3 | work | `#work` | Opens left and wide; the case cards sit in the same violet family |
-| 4 | services | `#services` | Light crosses to the right |
-| 5 | process | `section[aria-label="Process"]` | Drops low and widest during the horizontal pin |
-| 6 | studio | `#studio` | Rises back up, warmer |
-| 7 | contact | `#contact` | Brightest frame on the page; the bloom replaces the old lime glow |
-| 8 | footer | `footer` | Sinks below the fold |
+Licence: the Pexels Licence. Free for commercial use, no attribution
+required, no permission needed. Redistributing the clip as stock footage is
+not allowed, which is one reason we re-encode and host our own copy instead
+of hotlinking the Pexels CDN.
 
-Chapters are keyed to **measured** offsets, not equal slices of the document.
-This matters: `Showreel` is `280vh` pinned and `Process` is `300vh` pinned on
-desktop, so roughly 40% of real scroll distance happens inside two sections.
-Equal eighths would be out of sync with what is on screen. Offsets are
-re-measured on every `ScrollTrigger.refresh()` and on resize.
+Hosting is deliberately off-repo: a 10MB binary does not belong in git
+history, and Vercel should not serve it from the app bundle.
 
-If an anchor selector ever stops matching, that chapter falls back to an even
-slice. A rename degrades the timing; it does not break the page.
+## Re-encoding, and why it is mandatory
 
-## Performance
+Stock clips carry a keyframe every few seconds. Setting `currentTime` forces
+the browser to decode forward from the nearest preceding keyframe, so with
+sparse keyframes every scroll tick costs a multi-frame decode and the scrub
+visibly stutters. Making every frame a keyframe turns each seek into a single
+decode. The file gets bigger, so resolution and frame rate come down to pay
+for it.
 
-- Six flat canvas passes per frame, no per-pixel loops, no WebGL context.
-- Device pixel ratio is capped at 2.
-- The loop pauses on `visibilitychange`.
-- `prefers-reduced-motion` renders a single still frame and never starts the
-  loop or the ScrollTrigger.
-- Removing `Hero3D` takes three.js (~600 KB) out of the bundle.
+```bash
+ffmpeg -y -i src.mp4 -an \
+  -vf "scale=1600:-2:flags=lanczos,fps=24,\
+eq=saturation=0.82:contrast=1.05:brightness=-0.05,\
+colorbalance=rs=-0.06:gs=-0.07:bs=0.10:rm=0.05:gm=-0.04:bm=0.07:rh=0.07:gh=-0.02:bh=0.06,\
+curves=all='0/0 0.5/0.46 1/0.96'" \
+  -c:v libx264 -profile:v high -pix_fmt yuv420p \
+  -g 1 -keyint_min 1 -sc_threshold 0 \
+  -crf 27 -preset medium -movflags +faststart \
+  scrub.mp4
+```
 
-## Adding a rendered film later
+Result: 1600x900, 24fps, 240 frames, 240 keyframes, 10.8MB, `faststart` so
+playback can begin before the whole file arrives.
 
-Drop frames plus a manifest into `public/backdrop/` and the component switches
-over on the next load, with no code change. See `public/backdrop/README.md`.
+The grade is not decoration. The source leans blue, and the palette has no
+blue in it, so the filter chain pushes hue toward violet, drops saturation,
+and crushes blacks toward `#0C0C0C` so the clip sits inside the palette
+instead of fighting it. Grading in ffmpeg rather than with a CSS blend keeps
+the cost at zero on the client.
 
-Budget: 4 MB total for desktop. If the sequence cannot hit that, keep the
-procedural film. A slow premium backdrop is worse than a fast one.
+## Requirements for any replacement clip
 
-## Wiring checklist
+The host must answer with `accept-ranges: bytes`. Without range requests the
+browser cannot seek and the scrub cannot work at all. Verify before shipping:
 
-The backdrop is inert until it is mounted. Remaining edits:
+```bash
+curl -sIL "$URL" | grep -iE '^(HTTP/|content-length:|accept-ranges:)'
+curl -sS -r 0-1023 -o /dev/null -w '%{http_code}\n' "$URL"   # expect 206
+```
 
-- [ ] `src/App.tsx` - render `<GlobalBackdrop />` and wrap `<main>` + `<Footer>`
-      in `<div className="relative z-10">`
-- [ ] `src/components/Hero.tsx` - delete the local radial gradient and the
-      lazy `Hero3D` mount; keep only the bottom fade into the next section
-- [ ] `src/components/Work.tsx` - retune the four case gradients to one violet
-      ramp (four depths of the same family, not four hues)
-- [ ] `src/components/Contact.tsx` - delete the lime radial glow
-- [ ] `tailwind.config.cjs` + `src/index.css` - `accent` to `#8B6FE8`, add
-      `lavender` `#D2C3F6`, align `page` with the canvas base `#0C0C0C`,
-      update `::selection` and `:focus-visible`
-- [ ] delete `src/components/Hero3D.tsx` and drop `three` / `@types/three`
+Other constraints worth keeping:
+
+- 8 to 16 seconds. Long clips waste bytes, because the whole page maps onto
+  the whole clip either way.
+- Landscape. A portrait source gets cropped to nothing by `object-cover`.
+- Modest bitrate at the source. A 105Mbps 4K clip is 131MB before you start.
+- Abstract and slow. Anything with a recognisable subject or a hard cut reads
+  as a stock video playing behind the text.
+
+## Swapping the clip
+
+Re-encode with the recipe above, upload to off-repo hosting, and change
+`BACKDROP_VIDEO_URL` in `src/components/GlobalBackdrop.tsx`. That is the only
+code change.

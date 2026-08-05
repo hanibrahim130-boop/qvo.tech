@@ -1,97 +1,76 @@
 import { useEffect, useRef } from 'react'
 import { ScrollTrigger } from '../lib/gsap'
 import { setBackdropProgress } from '../lib/backdropProgress'
-import { FrameSequence, pickSequence } from '../lib/frameSequence'
-import type { BackdropManifest } from '../lib/frameSequence'
-import {
-  PALETTE,
-  baseWithAlpha,
-  createDustField,
-  drawBackdrop,
-  measureChapterStops,
-  sampleChapters,
-} from '../lib/proceduralBackdrop'
 
 /**
- * One canvas behind the entire site, scrubbed by one master ScrollTrigger.
+ * One video behind the entire site, scrubbed by one master ScrollTrigger.
+ *
+ * There is no canvas and no procedural drawing any more. The backdrop is a
+ * single graded clip seeked frame by frame as the page scrolls, so the whole
+ * site reads as one continuous shot instead of several separate backgrounds.
  *
  * Layering: this sits at `fixed inset-0 z-0` and everything else on the page
  * lives in a `relative z-10` wrapper, so the noise overlay (90), navbar (50),
  * cursor (200/210) and preloader (300) are all untouched.
  *
- * Scroll: Lenis already drives ScrollTrigger.update(), so this reads progress
- * from a ScrollTrigger rather than adding a second scroll listener that would
+ * Scroll: Lenis already drives ScrollTrigger.update(), so progress is read
+ * from a ScrollTrigger rather than a second scroll listener, which would
  * desync the smooth scroll.
+ *
+ * The clip is hosted off-repo and encoded with every frame as a keyframe.
+ * Without that encode, each seek has to decode forward from a distant
+ * keyframe and the scrub stutters. See `docs/global-backdrop.md`.
  */
 
-const MANIFEST_URL = '/backdrop/manifest.json'
-const DUST_COUNT = 220
+const BACKDROP_VIDEO_URL =
+  'https://d2ol7oe51mr4n9.cloudfront.net/user_3H8VUZ56qpYUqf0FLA7VCo56ETY/4cfe5d4a-2140-4d67-b2e0-f599d3134941.mp4'
+
+/** One seek per frame at ~30fps is plenty; more only queues up decode work. */
+const SEEK_THROTTLE_MS = 33
+/** Ignore sub-frame seeks. The clip is 24fps, so one frame is ~0.0417s. */
+const MIN_SEEK_DELTA_SECONDS = 0.02
+/** Seeking to the very end can land past the final sample. */
+const TAIL_TRIM_SECONDS = 0.05
 /** Progress chases the scroll instead of matching it. The lag is the point. */
-const EASE = 0.12
+const EASE = 0.1
+/** The single frame shown when the visitor prefers reduced motion. */
+const STILL_PROGRESS = 0.35
 
 export default function GlobalBackdrop() {
-  const canvasRef = useRef<HTMLCanvasElement | null>(null)
+  const videoRef = useRef<HTMLVideoElement | null>(null)
 
   useEffect(() => {
-    const canvas = canvasRef.current
-    if (!canvas) return
-    const ctx = canvas.getContext('2d', { alpha: false })
-    if (!ctx) return
+    const video = videoRef.current
+    if (!video) return
 
     const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches
-    const dust = createDustField(reduced ? 0 : DUST_COUNT)
-    const startedAt = performance.now()
 
-    let width = window.innerWidth
-    let height = window.innerHeight
-    let stops = measureChapterStops()
     let target = 0
     let rendered = 0
-    let direction = 1
-    let sequence: FrameSequence | null = null
+    let duration = 0
+    let lastSeekAt = 0
+    let lastSeekedTo = -1
     let frameId = 0
     let running = false
     let disposed = false
 
-    const resize = () => {
-      const dpr = Math.min(window.devicePixelRatio || 1, 2)
-      width = canvas.clientWidth || window.innerWidth
-      height = canvas.clientHeight || window.innerHeight
-      canvas.width = Math.round(width * dpr)
-      canvas.height = Math.round(height * dpr)
-      ctx.setTransform(dpr, 0, 0, dpr, 0, 0)
+    const seek = (progress: number, now: number, force = false) => {
+      if (!duration) return
+      const span = Math.max(duration - TAIL_TRIM_SECONDS, 0)
+      const time = Math.min(Math.max(progress, 0), 1) * span
+      if (!force) {
+        if (Math.abs(time - lastSeekedTo) < MIN_SEEK_DELTA_SECONDS) return
+        if (now - lastSeekAt < SEEK_THROTTLE_MS) return
+      }
+      lastSeekAt = now
+      lastSeekedTo = time
+      video.currentTime = time
     }
 
     const paint = (now: number) => {
-      const time = (now - startedAt) / 1000
       const delta = target - rendered
-      if (delta > 0.0001) direction = 1
-      else if (delta < -0.0001) direction = -1
       rendered = Math.abs(delta) < 0.0002 ? target : rendered + delta * EASE
-
-      const state = sampleChapters(rendered, stops)
-
-      if (sequence && sequence.ready) {
-        const index = Math.round(rendered * (sequence.count - 1))
-        sequence.prefetch(index, direction)
-        const frame = sequence.frameAt(index)
-        if (frame) {
-          const scale = Math.max(width / frame.width, height / frame.height)
-          const w = frame.width * scale
-          const h = frame.height * scale
-          ctx.drawImage(frame.source, (width - w) / 2, (height - h) / 2, w, h)
-        } else {
-          ctx.fillStyle = sequence.averageColor
-          ctx.fillRect(0, 0, width, height)
-        }
-        if (state.scrim > 0.001) {
-          ctx.fillStyle = baseWithAlpha(state.scrim)
-          ctx.fillRect(0, 0, width, height)
-        }
-      } else {
-        drawBackdrop(ctx, width, height, state, dust, time)
-      }
-
+      seek(rendered, now)
       setBackdropProgress(rendered)
     }
 
@@ -101,7 +80,7 @@ export default function GlobalBackdrop() {
     }
 
     const sync = () => {
-      const shouldRun = !reduced && !disposed && !document.hidden
+      const shouldRun = !reduced && !disposed && duration > 0 && !document.hidden
       if (shouldRun && !running) {
         running = true
         frameId = requestAnimationFrame(loop)
@@ -111,18 +90,24 @@ export default function GlobalBackdrop() {
       }
     }
 
-    const onResize = () => {
-      resize()
-      stops = measureChapterStops()
-      if (!running) paint(performance.now())
+    const onMetadata = () => {
+      if (disposed) return
+      duration = Number.isFinite(video.duration) ? video.duration : 0
+      if (!duration) return
+      // Some mobile browsers will not paint a seeked frame until the element
+      // has been played at least once, so prime the decoder and stop again.
+      video
+        .play()
+        .then(() => video.pause())
+        .catch(() => {})
+      seek(reduced ? STILL_PROGRESS : rendered, performance.now(), true)
+      sync()
     }
 
-    resize()
-    paint(performance.now())
-    sync()
+    video.addEventListener('loadedmetadata', onMetadata)
+    if (video.readyState >= 1) onMetadata()
+    document.addEventListener('visibilitychange', sync)
 
-    // Chapters are keyed to measured section offsets, so they must be
-    // re-measured whenever the pinned sections change the document height.
     const trigger = reduced
       ? null
       : ScrollTrigger.create({
@@ -130,56 +115,47 @@ export default function GlobalBackdrop() {
           start: 'top top',
           end: 'bottom bottom',
           invalidateOnRefresh: true,
-          onRefresh: () => {
-            resize()
-            stops = measureChapterStops()
-          },
           onUpdate: (self) => {
             target = self.progress
           },
         })
 
-    window.addEventListener('resize', onResize)
-    document.addEventListener('visibilitychange', sync)
-
-    void (async () => {
-      try {
-        const response = await fetch(MANIFEST_URL, { cache: 'force-cache' })
-        if (!response.ok) return
-        const manifest = (await response.json()) as BackdropManifest
-        const chosen = pickSequence(manifest)
-        if (!chosen || disposed) return
-        const next = new FrameSequence(chosen)
-        await next.loadCoarse()
-        if (disposed) {
-          next.dispose()
-          return
-        }
-        sequence = next
-        if (!running) paint(performance.now())
-      } catch {
-        // No manifest: the procedural film is the design, not a fallback.
-      }
-    })()
-
     return () => {
       disposed = true
       running = false
       cancelAnimationFrame(frameId)
-      window.removeEventListener('resize', onResize)
+      video.removeEventListener('loadedmetadata', onMetadata)
       document.removeEventListener('visibilitychange', sync)
       trigger?.kill()
-      sequence?.dispose()
     }
   }, [])
 
   return (
     <div
       aria-hidden="true"
-      className="pointer-events-none fixed inset-0 z-0 overflow-hidden"
-      style={{ backgroundColor: PALETTE.base }}
+      className="pointer-events-none fixed inset-0 z-0 overflow-hidden bg-page"
     >
-      <canvas ref={canvasRef} className="block h-full w-full" />
+      <video
+        ref={videoRef}
+        src={BACKDROP_VIDEO_URL}
+        muted
+        playsInline
+        preload="auto"
+        disablePictureInPicture
+        className="absolute inset-0 block h-full w-full object-cover"
+      />
+      {/*
+        Legibility scrim. Light at the top where the hero type sits over the
+        calmest part of the frame, heavier at the bottom where the film gets
+        busiest. Tuned to keep the clip visible rather than to hide it.
+      */}
+      <div
+        className="absolute inset-0"
+        style={{
+          background:
+            'radial-gradient(130% 95% at 50% 0%, rgba(12,12,12,0.18) 0%, rgba(12,12,12,0.52) 52%, rgba(12,12,12,0.84) 100%)',
+        }}
+      />
     </div>
   )
 }
