@@ -3,10 +3,17 @@ import type { ReactNode } from 'react'
 import { gsap } from '../lib/gsap'
 import { prefersReducedMotion } from '../lib/usePrefersReducedMotion'
 
+/**
+ * Limits pointer attraction to an explicit wrapper so layout never depends on
+ * the transform applied for feedback. The optional controls tune interaction
+ * without exposing GSAP details to callers.
+ */
 interface MagneticProps {
+  /** Interactive content that should move as one target. */
   children: ReactNode
-  /** Pull strength: fraction of the pointer offset applied to the element. */
+  /** Fraction of pointer offset applied; a bounded value keeps the control reachable. */
   strength?: number
+  /** Lets the inert wrapper participate in surrounding spacing and layout. */
   className?: string
 }
 

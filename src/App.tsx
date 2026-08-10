@@ -2,13 +2,13 @@ import { useEffect, useState } from 'react'
 import Contact from './components/Contact'
 import Cursor from './components/Cursor'
 import Footer from './components/Footer'
+import GlobalBackdrop from './components/GlobalBackdrop'
 import Hero from './components/Hero'
 import Marquee from './components/Marquee'
 import Navbar from './components/Navbar'
 import Preloader from './components/Preloader'
 import Process from './components/Process'
 import Services from './components/Services'
-import Showreel from './components/Showreel'
 import Studio from './components/Studio'
 import Work from './components/Work'
 import { ScrollTrigger } from './lib/gsap'
@@ -22,6 +22,12 @@ const MARQUEE_ITEMS = [
   'Motion & 3D',
 ]
 
+/**
+ * Keeps page-wide orchestration in one composition root so the preloader,
+ * smooth-scroll clock and fixed paper ground each have exactly one owner.
+ * Section components can then manage local choreography without creating
+ * competing global listeners or duplicated infrastructure.
+ */
 export default function App() {
   const [started, setStarted] = useState(false)
 
@@ -44,19 +50,21 @@ export default function App() {
     <>
       <Preloader onComplete={() => setStarted(true)} />
       <Cursor />
-      <div className="noise-overlay" aria-hidden="true" />
+      {/* Static paste-up grid at z-0; the page content stays above it. */}
+      <GlobalBackdrop />
       <Navbar />
-      <main>
-        <Hero started={started} />
-        <Marquee items={MARQUEE_ITEMS} />
-        <Showreel />
-        <Work />
-        <Services />
-        <Process />
-        <Studio />
-        <Contact />
-      </main>
-      <Footer />
+      <div className="relative z-10">
+        <main>
+          <Hero started={started} />
+          <Marquee items={MARQUEE_ITEMS} />
+          <Work />
+          <Services />
+          <Process />
+          <Studio />
+          <Contact />
+        </main>
+        <Footer />
+      </div>
     </>
   )
 }

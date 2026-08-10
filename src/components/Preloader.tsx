@@ -3,11 +3,21 @@ import { Hexagon } from 'lucide-react'
 import { gsap } from '../lib/gsap'
 import { prefersReducedMotion } from '../lib/usePrefersReducedMotion'
 
+/**
+ * Provides a hand-off signal rather than exposing the preloader timeline. The
+ * parent only needs to know when hero motion may begin, not how the curtain is
+ * animated.
+ */
 interface PreloaderProps {
-  /** Fired as the curtain starts lifting, so the hero intro can overlap it. */
+  /** Starts the hero as the curtain lifts so the two timelines feel continuous. */
   onComplete: () => void
 }
 
+/**
+ * Holds the first paint until the branded hand-off is ready, while immediately
+ * yielding under reduced motion. The callback is kept in a ref so parent
+ * renders cannot restart a one-shot timeline.
+ */
 export default function Preloader({ onComplete }: PreloaderProps) {
   const rootRef = useRef<HTMLDivElement>(null)
   const markRef = useRef<HTMLDivElement>(null)
@@ -69,25 +79,25 @@ export default function Preloader({ onComplete }: PreloaderProps) {
       aria-hidden="true"
       className="fixed inset-0 z-[300] flex flex-col justify-between bg-page px-5 py-6 sm:px-8 md:px-12"
     >
-      <div className="flex items-center justify-between font-mono text-[11px] uppercase tracking-[0.2em] text-white/40">
+      <div className="flex items-center justify-between font-mono text-[11px] uppercase tracking-[0.2em] text-ink/40">
         <span>QVO — Studio</span>
-        <span>Est. 2026</span>
+        <span>Lebanon</span>
       </div>
 
       <div ref={markRef} className="flex items-center justify-center gap-3">
         <Hexagon size={34} strokeWidth={1.5} className="text-accent" />
-        <span className="font-display text-3xl font-medium tracking-tight text-white sm:text-4xl">
+        <span className="font-display text-3xl font-medium tracking-tight text-ink sm:text-4xl">
           qvo.tech
         </span>
       </div>
 
       <div className="flex items-end justify-between">
-        <span className="font-mono text-[11px] uppercase tracking-[0.2em] text-white/40">
+        <span className="font-mono text-[11px] uppercase tracking-[0.2em] text-ink/40">
           Loading experience
         </span>
         <span
           ref={countRef}
-          className="font-display text-6xl font-medium leading-none tracking-tight text-white/90 sm:text-7xl"
+          className="font-display text-6xl font-medium leading-none tracking-tight text-ink/90 sm:text-7xl"
         >
           000
         </span>

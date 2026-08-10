@@ -6,12 +6,17 @@ import { prefersReducedMotion } from '../lib/usePrefersReducedMotion'
 import Magnetic from './Magnetic'
 
 const LINKS = [
-  { href: '#work', label: 'Work', sup: '04' },
+  { href: '#work', label: 'Work', sup: '06' },
   { href: '#services', label: 'Services' },
   { href: '#studio', label: 'Studio' },
   { href: '#contact', label: 'Contact' },
 ]
 
+/**
+ * Owns desktop visibility and the mobile overlay together so scroll direction,
+ * document locking and menu choreography cannot disagree about navigation
+ * state. Reduced-motion handling is decided before either animation starts.
+ */
 export default function Navbar() {
   const headerRef = useRef<HTMLElement>(null)
   const overlayRef = useRef<HTMLDivElement>(null)
@@ -19,7 +24,7 @@ export default function Navbar() {
   const openRef = useRef(open)
   openRef.current = open
 
-  // Hide on scroll down, reveal on scroll up, glass background once scrolled.
+  // Hide on scroll down, reveal on scroll up, add opaque paper once scrolled.
   useEffect(() => {
     const header = headerRef.current
     if (!header) return
@@ -109,8 +114,8 @@ export default function Navbar() {
             className="flex items-center gap-2"
             aria-label="QVO — back to top"
           >
-            <Hexagon size={24} strokeWidth={1.5} className="text-white" />
-            <span className="font-display text-lg font-medium tracking-tight text-white sm:text-xl">
+            <Hexagon size={24} strokeWidth={1.5} className="text-ink" />
+            <span className="font-display text-lg font-medium tracking-tight text-ink sm:text-xl">
               qvo.tech
             </span>
           </a>
@@ -121,7 +126,7 @@ export default function Navbar() {
                 key={link.href}
                 href={link.href}
                 onClick={onAnchorClick}
-                className="group relative text-sm text-white/80 transition-colors duration-300 hover:text-white"
+                className="group relative text-sm text-ink/80 transition-colors duration-300 hover:text-ink"
               >
                 {link.label}
                 {link.sup && (
@@ -139,7 +144,7 @@ export default function Navbar() {
             <Magnetic>
               <a
                 href="mailto:hello@qvo.tech"
-                className="hidden items-center gap-1.5 rounded-full bg-white px-5 py-2 text-sm font-medium text-black transition-colors duration-300 hover:bg-accent md:inline-flex"
+                className="hidden items-center gap-1.5 bg-ink px-5 py-2 text-sm font-medium text-page transition-colors duration-300 hover:bg-accent md:inline-flex"
               >
                 Start a project
                 <ArrowUpRight size={15} />
@@ -150,15 +155,15 @@ export default function Navbar() {
               onClick={() => setOpen((v) => !v)}
               aria-expanded={open}
               aria-controls="mobile-menu"
-              className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-white/20 bg-white/10 backdrop-blur-md md:hidden"
+              className="inline-flex h-10 w-10 items-center justify-center border border-ink/20 bg-ink/10 md:hidden"
             >
               <span className="sr-only">{open ? 'Close menu' : 'Open menu'}</span>
               {open ? (
                 <X size={18} />
               ) : (
                 <span aria-hidden="true" className="flex flex-col gap-1.5">
-                  <span className="block h-px w-5 bg-white" />
-                  <span className="block h-px w-5 bg-white" />
+                  <span className="block h-px w-5 bg-ink" />
+                  <span className="block h-px w-5 bg-ink" />
                 </span>
               )}
             </button>
@@ -181,7 +186,7 @@ export default function Navbar() {
                   setOpen(false)
                   onAnchorClick(event)
                 }}
-                className="inline-flex items-baseline gap-3 font-display text-5xl font-medium tracking-tight text-white"
+                className="inline-flex items-baseline gap-3 font-display text-5xl font-medium tracking-tight text-ink"
               >
                 <span className="font-mono text-xs text-accent">0{i + 1}</span>
                 {link.label}
@@ -193,12 +198,12 @@ export default function Navbar() {
           <a
             data-menu-link
             href="mailto:hello@qvo.tech"
-            className="inline-flex w-max items-center gap-2 rounded-full bg-accent px-6 py-3 text-sm font-medium text-black"
+            className="inline-flex w-max items-center gap-2 bg-accent px-6 py-3 text-sm font-medium text-page"
           >
             Start a project
             <ArrowUpRight size={16} />
           </a>
-          <span data-menu-link className="font-mono text-[11px] uppercase tracking-[0.2em] text-white/40">
+          <span data-menu-link className="font-mono text-[11px] uppercase tracking-[0.2em] text-ink/40">
             hello@qvo.tech — worldwide
           </span>
         </div>

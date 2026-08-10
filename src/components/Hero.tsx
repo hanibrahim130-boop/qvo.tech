@@ -1,4 +1,4 @@
-import { Suspense, lazy, useEffect, useRef } from 'react'
+import { useEffect, useRef } from 'react'
 import { ArrowDown, ArrowUpRight } from 'lucide-react'
 import { gsap, useGsapContext } from '../lib/gsap'
 import { splitLines } from '../lib/splitText'
@@ -7,13 +7,20 @@ import { usePrefersReducedMotion } from '../lib/usePrefersReducedMotion'
 import { onAnchorClick } from '../lib/anchors'
 import Magnetic from './Magnetic'
 
-const Hero3D = lazy(() => import('./Hero3D'))
-
+/**
+ * Coordinates the opening timeline with the preloader instead of relying on a
+ * timeout that could race font loading or a slower device.
+ */
 interface HeroProps {
-  /** Flips to true as the preloader lifts; starts the intro timeline. */
+  /** Prevents the headline reveal from completing unseen behind the curtain. */
   started: boolean
 }
 
+/**
+ * Establishes the site's message before any portfolio proof appears. Its
+ * motion is scoped and reversible so reduced-motion visitors and responsive
+ * reflow receive the same readable heading rather than an animation snapshot.
+ */
 export default function Hero({ started }: HeroProps) {
   const sectionRef = useRef<HTMLElement>(null)
   const contentRef = useRef<HTMLDivElement>(null)
@@ -63,7 +70,7 @@ export default function Hero({ started }: HeroProps) {
     }
   }, [started, reduced])
 
-  // Content recedes as the visitor scrolls into the showreel.
+  // Content recedes as the visitor scrolls out of the hero.
   useGsapContext(
     () => {
       if (reduced) return
@@ -89,30 +96,26 @@ export default function Hero({ started }: HeroProps) {
       id="top"
       className="relative flex h-[100svh] min-h-[640px] flex-col overflow-hidden"
     >
-      {/* Backdrop: CSS gradient always, WebGL scene layered on when it loads. */}
-      <div className="absolute inset-0" aria-hidden="true">
-        <div className="absolute inset-0 bg-[radial-gradient(110%_85%_at_72%_25%,#17171b_0%,#0a0a0a_62%)]" />
-        <Suspense fallback={null}>
-          <Hero3D className="absolute inset-0" />
-        </Suspense>
-        <div className="absolute inset-x-0 bottom-0 h-40 bg-gradient-to-b from-transparent to-page" />
-      </div>
-
+      {/*
+        GlobalBackdrop owns the shared paper and registration grid. Keeping the
+        hero transparent lets that page ground continue through every section
+        instead of boxing the opening into a separate piece of artwork.
+      */}
       <div
         ref={contentRef}
         className="relative z-10 flex flex-1 flex-col justify-end px-5 pb-8 pt-28 sm:px-8 md:px-12"
       >
         <div>
-          <div data-hero-fade className="mb-6 inline-flex items-center gap-2.5 rounded-full border border-white/15 bg-white/5 px-4 py-2 backdrop-blur-md">
-            <span className="h-1.5 w-1.5 rounded-full bg-accent motion-safe:animate-pulse" aria-hidden="true" />
-            <span className="font-mono text-[11px] uppercase tracking-[0.2em] text-white/70">
+          <div data-hero-fade className="mb-6 inline-flex items-center gap-2.5 border border-ink/15 bg-ink/5 px-4 py-2">
+            <span className="h-1.5 w-1.5 bg-accent motion-safe:animate-pulse" aria-hidden="true" />
+            <span className="font-mono text-[11px] uppercase tracking-[0.2em] text-ink/70">
               Independent web design studio
             </span>
           </div>
 
           <h1
             ref={headlineRef}
-            className={`max-w-5xl font-display text-[clamp(3rem,9.5vw,8.75rem)] font-medium leading-[0.98] tracking-[-0.02em] text-white ${
+            className={`max-w-5xl font-display text-[clamp(3rem,9.5vw,8.75rem)] font-medium leading-[0.98] tracking-[-0.02em] text-ink ${
               reduced ? '' : 'opacity-0'
             }`}
           >
@@ -120,7 +123,7 @@ export default function Hero({ started }: HeroProps) {
           </h1>
 
           <div className="mt-8 flex flex-col gap-8 md:flex-row md:items-end md:justify-between">
-            <p data-hero-fade className="max-w-md text-base leading-relaxed text-white/65 sm:text-lg">
+            <p data-hero-fade className="max-w-md text-base leading-relaxed text-ink/65 sm:text-lg">
               QVO crafts considered digital experiences that make ambitious brands clear,
               credible, and impossible to ignore.
             </p>
@@ -129,7 +132,7 @@ export default function Hero({ started }: HeroProps) {
               <Magnetic>
                 <a
                   href="mailto:hello@qvo.tech"
-                  className="inline-flex items-center gap-2 rounded-full bg-accent px-7 py-3.5 text-sm font-medium text-black transition-colors duration-300 hover:bg-white"
+                  className="inline-flex items-center gap-2 bg-ink px-7 py-3.5 text-sm font-medium text-page transition-colors duration-300 hover:bg-ink"
                 >
                   Start a project
                   <ArrowUpRight size={16} />
@@ -138,7 +141,7 @@ export default function Hero({ started }: HeroProps) {
               <a
                 href="#work"
                 onClick={onAnchorClick}
-                className="inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/5 px-7 py-3.5 text-sm text-white backdrop-blur-md transition-colors duration-300 hover:bg-white/15"
+                className="inline-flex items-center gap-2 border border-ink/20 bg-ink/5 px-7 py-3.5 text-sm text-ink transition-colors duration-300 hover:bg-ink/15"
               >
                 See the work
               </a>
@@ -148,14 +151,14 @@ export default function Hero({ started }: HeroProps) {
 
         <div
           data-hero-fade
-          className="mt-12 flex items-center justify-between border-t border-white/10 pt-5 font-mono text-[11px] uppercase tracking-[0.2em] text-white/45"
+          className="mt-12 flex items-center justify-between border-t border-ink/10 pt-5 font-mono text-[11px] uppercase tracking-[0.2em] text-ink/45"
         >
           <span className="inline-flex items-center gap-2">
             Scroll to explore
             <ArrowDown size={13} className="motion-safe:animate-bounce" aria-hidden="true" />
           </span>
           <span className="hidden sm:block">Design × Engineering × Motion</span>
-          <span>Est. 2026</span>
+          <span>Lebanon</span>
         </div>
       </div>
     </section>

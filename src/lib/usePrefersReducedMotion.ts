@@ -8,7 +8,11 @@ function subscribe(onChange: () => void) {
   return () => mql.removeEventListener('change', onChange)
 }
 
-/** Reactive `prefers-reduced-motion` flag. */
+/**
+ * Subscribes React to the operating-system motion preference through the
+ * external-store contract, which keeps concurrent renders and live preference
+ * changes consistent instead of reading `matchMedia` once at mount time.
+ */
 export function usePrefersReducedMotion(): boolean {
   return useSyncExternalStore(
     subscribe,
@@ -17,7 +21,11 @@ export function usePrefersReducedMotion(): boolean {
   )
 }
 
-/** One-off, non-reactive check for imperative code paths. */
+/**
+ * Lets imperative setup code honour reduced motion before it allocates an
+ * animation object. Hooks cannot be called inside event handlers or GSAP setup
+ * callbacks, so those paths need the same policy as a synchronous query.
+ */
 export function prefersReducedMotion(): boolean {
   return typeof window !== 'undefined' && window.matchMedia(QUERY).matches
 }

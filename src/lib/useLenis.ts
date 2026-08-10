@@ -5,15 +5,23 @@ import { prefersReducedMotion } from './usePrefersReducedMotion'
 
 let activeLenis: Lenis | null = null
 
+/**
+ * Exposes the single Lenis owner to imperative navigation helpers. Sharing the
+ * instance prevents buttons and anchors from starting a native scroll that
+ * competes with the frame loop; `null` deliberately signals reduced motion or
+ * an unmounted app so callers can use the platform fallback.
+ */
 export function getLenis(): Lenis | null {
   return activeLenis
 }
 
 /**
- * Boots Lenis smooth scrolling on the window, drives it from the GSAP ticker
- * and keeps ScrollTrigger in sync. No-op when reduced motion is requested.
+ * Gives smooth scrolling and ScrollTrigger one shared animation clock. Driving
+ * Lenis from GSAP avoids two requestAnimationFrame loops drifting apart, while
+ * opting out before construction preserves native scrolling for visitors who
+ * request reduced motion.
  */
-export function useLenis() {
+export function useLenis(): void {
   useEffect(() => {
     if (prefersReducedMotion()) return
 
@@ -40,8 +48,13 @@ export function useLenis() {
   }, [])
 }
 
-/** Smooth-scrolls to a selector, element or absolute position. */
-export function scrollToTarget(target: string | number | HTMLElement) {
+/**
+ * Sends every programmatic jump through Lenis when it exists, with a native
+ * fallback so navigation still works before hydration and under reduced
+ * motion. Keeping that policy here prevents each CTA from choosing a subtly
+ * different scroll path.
+ */
+export function scrollToTarget(target: string | number | HTMLElement): void {
   if (activeLenis) {
     activeLenis.scrollTo(target, { duration: 1.2 })
     return

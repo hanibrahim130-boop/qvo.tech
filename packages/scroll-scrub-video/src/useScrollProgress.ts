@@ -1,6 +1,11 @@
 import { useCallback, useEffect, useRef } from 'react'
 import type { RefObject } from 'react'
 
+/**
+ * Defines one scroll owner and one reporting channel so measurement remains
+ * independent from whatever visual effect consumes progress. The hook can then
+ * serve video, canvas or typography without importing any of them.
+ */
 export interface UseScrollProgressOptions {
 	/**
 	 * The scrollable element to track. Omit it (or pass null) to track the
@@ -13,7 +18,7 @@ export interface UseScrollProgressOptions {
 	 * Defaults to `0.18`.
 	 */
 	smoothing?: number
-	/** Called with the smoothed progress, normalised to the `0…1` range. */
+	/** Receives normalised progress without forcing React state updates per frame. */
 	onChange: (progress: number) => void
 }
 

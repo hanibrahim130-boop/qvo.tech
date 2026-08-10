@@ -1,19 +1,27 @@
 import { useEffect, useRef, useState } from 'react'
 import type { CSSProperties, ReactNode } from 'react'
 
+/**
+ * Keeps reveal timing declarative while the component owns observation and
+ * reduced-motion fallbacks. Callers can compose choreography without reaching
+ * into the observer lifecycle or hiding content themselves.
+ */
 export interface RevealProps {
+	/** Content remains in normal document flow so visibility never changes layout. */
 	children: ReactNode
-	/** Milliseconds to wait after the element enters the viewport. */
+	/** Offsets sibling entrances without requiring several observer instances. */
 	delay?: number
-	/** Pixels to travel upward while fading in. Defaults to `32`. */
+	/** Keeps travel proportional to the surrounding composition. Defaults to `32`. */
 	distance?: number
-	/** Transition duration in milliseconds. Defaults to `700`. */
+	/** Lets a consumer match local motion tempo. Defaults to `700`. */
 	duration?: number
-	/** Fraction of the element that must be visible to trigger. Defaults to `0.15`. */
+	/** Delays activation until enough content is meaningful. Defaults to `0.15`. */
 	threshold?: number
-	/** When false, the element hides again after leaving the viewport. */
+	/** Set false only when repeated entrances communicate state rather than decoration. */
 	once?: boolean
+	/** Composes layout on the wrapper without coupling the package to a CSS system. */
 	className?: string
+	/** Allows host-specific layout values while transition ownership stays internal. */
 	style?: CSSProperties
 }
 

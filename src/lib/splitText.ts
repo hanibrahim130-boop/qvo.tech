@@ -1,3 +1,8 @@
+/**
+ * Handles temporary animation wrappers as a reversible transaction. Callers
+ * retain the generated nodes for GSAP but must be able to restore the original
+ * semantic markup once measurement-dependent animation is finished.
+ */
 export interface SplitResult {
   /** Word wrappers, in document order. */
   words: HTMLElement[]
@@ -8,12 +13,11 @@ export interface SplitResult {
 }
 
 /**
- * Splits an element's content into `.split-word` spans grouped under
- * `.split-line` masks, so words can slide in from below a line mask.
- *
- * Inline child elements (e.g. an italic `<em>`) are treated as atomic words
- * and `<br>` forces a line break. Call `revert()` once the intro animation
- * finishes to restore natural text wrapping.
+ * Builds measured line masks for entrance animation without making those
+ * wrappers permanent page structure. Inline emphasis stays atomic so the
+ * typographic voice survives the split, while `revert()` returns wrapping to
+ * the browser after the one-shot animation instead of freezing desktop line
+ * breaks into responsive layouts.
  */
 export function splitLines(el: HTMLElement): SplitResult {
   const originalHTML = el.innerHTML
@@ -89,8 +93,9 @@ export function splitLines(el: HTMLElement): SplitResult {
 }
 
 /**
- * Splits an element's text content into plain word spans (no line masks),
- * preserving natural wrapping. Ideal for scroll-scrubbed word highlighting.
+ * Exposes words individually while leaving line formation to normal layout.
+ * Scroll-scrubbed emphasis needs per-word targets, but line masks would lock
+ * the statement to measurements that become stale at the next breakpoint.
  */
 export function splitWords(el: HTMLElement): SplitResult {
   const originalHTML = el.innerHTML

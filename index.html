@@ -10,7 +10,7 @@
     />
     <link rel="canonical" href="https://qvo.tech/" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <meta name="theme-color" content="#0a0a0a" />
+    <meta name="theme-color" content="#EDE9E1" />
 
     <!-- Open Graph -->
     <meta property="og:type" content="website" />
@@ -21,10 +21,10 @@
       content="Web design, web development and digital strategy for ambitious brands. Design that drives growth."
     />
     <meta property="og:url" content="https://qvo.tech/" />
-    <meta property="og:image" content="https://qvo.tech/hero-poster.jpg" />
-    <meta property="og:image:width" content="640" />
-    <meta property="og:image:height" content="360" />
-    <meta property="og:image:alt" content="Cinematic dark hero frame from the QVO scroll-driven website" />
+    <meta property="og:image" content="https://qvo.tech/qvo-share.jpg" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="QVO paper share card with Design that drives growth in black and red letterpress typography" />
     <meta property="og:locale" content="en_US" />
 
     <!-- Twitter -->
@@ -34,15 +34,29 @@
       name="twitter:description"
       content="Web design, web development and digital strategy for ambitious brands. Design that drives growth."
     />
-    <meta name="twitter:image" content="https://qvo.tech/hero-poster.jpg" />
-    <meta name="twitter:image:alt" content="Cinematic dark hero frame from the QVO scroll-driven website" />
+    <meta name="twitter:image" content="https://qvo.tech/qvo-share.jpg" />
+    <meta name="twitter:image:alt" content="QVO paper share card with Design that drives growth in black and red letterpress typography" />
 
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <!--
+      Bricolage Grotesque and Fraunces, both OFL, are installed at exactly
+      5.3.0 and imported in src/index.css. Vite fingerprints these package
+      files and rewrites the preload URLs to the same bundled assets used by
+      the generated CSS, so no third-party origin sits on the render path.
+    -->
     <link
-      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Instrument+Serif:ital,wght@0,400;1,400&family=Space+Grotesk:wght@400;500;600;700&display=swap"
-      rel="stylesheet"
-    >
+      rel="preload"
+      as="font"
+      type="font/woff2"
+      crossorigin
+      href="/node_modules/@fontsource-variable/bricolage-grotesque/files/bricolage-grotesque-latin-standard-normal.woff2"
+    />
+    <link
+      rel="preload"
+      as="font"
+      type="font/woff2"
+      crossorigin
+      href="/node_modules/@fontsource-variable/fraunces/files/fraunces-latin-full-italic.woff2"
+    />
 
     <script type="application/ld+json">
       {
@@ -74,7 +88,7 @@
             "name": "QVO.TECH — Web Design For Ambitious Brands",
             "isPartOf": { "@id": "https://qvo.tech/#website" },
             "about": { "@id": "https://qvo.tech/#organization" },
-            "primaryImageOfPage": "https://qvo.tech/hero-poster.jpg",
+            "primaryImageOfPage": "https://qvo.tech/qvo-share.jpg",
             "description": "QVO is a web design studio creating considered digital experiences that make ambitious brands clear, credible, and impossible to ignore.",
             "inLanguage": "en"
           }

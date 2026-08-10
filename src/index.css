@@ -1,14 +1,35 @@
+/*
+  Two variable families, both OFL, both pinned to an exact version.
+
+  Bricolage Grotesque — Mathieu Triay / Atelier Triay, OFL-1.1.
+  Fraunces — Phaedra Charles & Flavia Zimbardi / Undercase Type, OFL-1.1.
+
+  Neither is a default. The point of both is that their axes are usable:
+  Bricolage genuinely narrows (wdth 75-100) instead of being squashed, and
+  Fraunces carries WONK, which swaps in leaning, bulbous letterforms that no
+  amount of CSS can fake.
+
+  Self-hosted from exact Fontsource 5.3.0 packages. Bricolage's standard cut
+  carries all of its registered axes; Fraunces needs the full cuts because
+  they alone carry the custom SOFT and WONK axes used by `.axis-wonk`.
+*/
+@import '@fontsource-variable/bricolage-grotesque/standard.css';
+@import '@fontsource-variable/fraunces/full.css';
+@import '@fontsource-variable/fraunces/full-italic.css';
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 :root {
-  font-family: Inter, system-ui, sans-serif;
-  color: #fff;
-  background: #0a0a0a;
+  font-family: 'Bricolage Grotesque Variable', 'Bricolage Grotesque', system-ui, sans-serif;
+  color: #141210;
+  background: #ede9e1;
   font-synthesis: none;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
+  /* Let the optical size axis track the rendered size on its own. */
+  font-optical-sizing: auto;
 }
 
 * {
@@ -25,7 +46,7 @@ body,
 
 body {
   min-height: 100vh;
-  background: #0a0a0a;
+  background: #ede9e1;
   overflow-x: clip;
 }
 
@@ -36,29 +57,28 @@ html.menu-open {
 }
 
 ::selection {
-  background: #d9ff3f;
-  color: #0a0a0a;
+  background: #c0301a;
+  color: #ede9e1;
 }
 
 ::-webkit-scrollbar {
   width: 10px;
 }
 ::-webkit-scrollbar-track {
-  background: #0a0a0a;
+  background: #ede9e1;
 }
 ::-webkit-scrollbar-thumb {
-  background: #2a2a2e;
-  border-radius: 8px;
-  border: 2px solid #0a0a0a;
+  background: #c9c2b5;
+  border: 2px solid #ede9e1;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: #3a3a40;
+  background: #141210;
 }
 
 :focus-visible {
-  outline: 2px solid #d9ff3f;
+  outline: 2px solid #c0301a;
   outline-offset: 3px;
-  border-radius: 2px;
+  border-radius: 0;
 }
 
 /* Recommended Lenis smooth-scroll styles. */
@@ -76,21 +96,40 @@ html.lenis body {
   overflow: hidden;
 }
 
-/* Filmic grain laid over the whole page. */
-.noise-overlay {
-  position: fixed;
-  inset: 0;
-  z-index: 90;
-  pointer-events: none;
-  opacity: 0.05;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
-  background-size: 180px 180px;
+/*
+  Width utilities.
+
+  These use `font-stretch`, not `font-variation-settings`. That is not a
+  stylistic preference: font-variation-settings resets every axis it does not
+  explicitly name, so setting wdth that way would silently cancel every
+  Tailwind font-weight applied to the same element. font-stretch is the
+  registered CSS property for the wdth axis and composes with font-weight
+  normally.
+*/
+.axis-compressed {
+  font-stretch: 76%;
+}
+.axis-display {
+  font-stretch: 100%;
+}
+.axis-caption {
+  font-stretch: 88%;
 }
 
-/* Big hollow display type. */
+/*
+  Fraunces at full wonk. SOFT and WONK are custom axes with no CSS property
+  of their own, so font-variation-settings is the only route — and wght has
+  to be restated here for the reason above. This class is only used on <em>
+  runs that are already font-normal.
+*/
+.axis-wonk {
+  font-variation-settings: 'WONK' 1, 'SOFT' 30, 'opsz' 120, 'wght' 400;
+}
+
+/* Big hollow display type, cut out of ink rather than white. */
 .text-outline {
   color: transparent;
-  -webkit-text-stroke: 1px rgba(255, 255, 255, 0.22);
+  -webkit-text-stroke: 1px rgba(20, 18, 16, 0.28);
 }
 
 /* Split-text helpers: lines act as masks, words slide inside them. */
@@ -103,12 +142,22 @@ html.lenis body {
   will-change: transform;
 }
 
-/* Navbar once the page has been scrolled. */
+/*
+  Navbar once the page has been scrolled. Opaque paper with a hairline rule.
+  No backdrop-filter anywhere on the site now: frosted glass is the single
+  most recognisable generated-template tell.
+*/
 .nav-scrolled {
-  background: rgba(10, 10, 10, 0.6);
-  border-color: rgba(255, 255, 255, 0.1);
-  backdrop-filter: blur(14px);
-  -webkit-backdrop-filter: blur(14px);
+  background: #ede9e1;
+  border-color: rgba(20, 18, 16, 0.16);
+}
+
+/* Canvas plates are pixel art. Never let the browser smooth them. */
+.plate-canvas {
+  image-rendering: pixelated;
+  display: block;
+  width: 100%;
+  height: 100%;
 }
 
 /* The custom cursor replaces the native one on precise pointers only. */
