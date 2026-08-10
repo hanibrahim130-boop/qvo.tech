@@ -52,7 +52,7 @@ export default function Services() {
               <Magnetic className="mt-8">
                 <a
                   href="mailto:hello@qvo.tech"
-                  className="inline-flex items-center gap-2 rounded-full border border-ink/20 bg-ink/5 px-6 py-3 text-sm text-ink backdrop-blur-md transition-colors duration-300 hover:border-accent hover:text-accent"
+                  className="inline-flex items-center gap-2 border border-ink/20 bg-ink/5 px-6 py-3 text-sm text-ink transition-colors duration-300 hover:border-accent hover:text-accent"
                 >
                   Scope your project
                   <ArrowUpRight size={15} />
@@ -79,7 +79,7 @@ export default function Services() {
                       {service.tags.map((tag) => (
                         <span
                           key={tag}
-                          className="rounded-full border border-ink/15 bg-ink/5 px-3.5 py-1.5 font-mono text-[10px] uppercase tracking-[0.15em] text-ink/60 transition-colors duration-300 group-hover:border-ink/25 group-hover:text-ink/80"
+                          className="border border-ink/15 bg-ink/5 px-3.5 py-1.5 font-mono text-[10px] uppercase tracking-[0.15em] text-ink/60 transition-colors duration-300 group-hover:border-ink/25 group-hover:text-ink/80"
                         >
                           {tag}
                         </span>

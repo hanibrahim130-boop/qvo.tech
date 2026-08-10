@@ -120,7 +120,7 @@ export default function Process() {
                     key={point}
                     className="flex items-center gap-2.5 font-mono text-[11px] uppercase tracking-[0.15em] text-ink/45"
                   >
-                    <span className="h-1 w-1 rounded-full bg-accent" aria-hidden="true" />
+                    <span className="h-1 w-1 bg-accent" aria-hidden="true" />
                     {point}
                   </li>
                 ))}

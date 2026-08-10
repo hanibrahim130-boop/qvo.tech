@@ -65,7 +65,7 @@ export default function Contact() {
           <Magnetic strength={0.4}>
             <a
               href="mailto:hello@qvo.tech"
-              className="inline-flex items-center gap-2.5 rounded-full bg-ink px-9 py-4 text-base font-medium text-page transition-colors duration-300 hover:bg-ink sm:px-10 sm:py-5"
+              className="inline-flex items-center gap-2.5 bg-ink px-9 py-4 text-base font-medium text-page transition-colors duration-300 hover:bg-ink sm:px-10 sm:py-5"
             >
               Book a call
               <ArrowUpRight size={18} />
@@ -78,7 +78,7 @@ export default function Contact() {
             hello@qvo.tech
           </a>
           <p className="inline-flex items-center gap-2 font-mono text-[11px] uppercase tracking-[0.2em] text-ink/45">
-            <span className="h-1.5 w-1.5 rounded-full bg-accent motion-safe:animate-pulse" aria-hidden="true" />
+            <span className="h-1.5 w-1.5 bg-accent motion-safe:animate-pulse" aria-hidden="true" />
             Now booking — Q4 2026
           </p>
         </div>

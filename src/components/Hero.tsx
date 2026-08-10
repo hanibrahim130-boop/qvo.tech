@@ -98,8 +98,8 @@ export default function Hero({ started }: HeroProps) {
         className="relative z-10 flex flex-1 flex-col justify-end px-5 pb-8 pt-28 sm:px-8 md:px-12"
       >
         <div>
-          <div data-hero-fade className="mb-6 inline-flex items-center gap-2.5 rounded-full border border-ink/15 bg-ink/5 px-4 py-2 backdrop-blur-md">
-            <span className="h-1.5 w-1.5 rounded-full bg-accent motion-safe:animate-pulse" aria-hidden="true" />
+          <div data-hero-fade className="mb-6 inline-flex items-center gap-2.5 border border-ink/15 bg-ink/5 px-4 py-2">
+            <span className="h-1.5 w-1.5 bg-accent motion-safe:animate-pulse" aria-hidden="true" />
             <span className="font-mono text-[11px] uppercase tracking-[0.2em] text-ink/70">
               Independent web design studio
             </span>
@@ -124,7 +124,7 @@ export default function Hero({ started }: HeroProps) {
               <Magnetic>
                 <a
                   href="mailto:hello@qvo.tech"
-                  className="inline-flex items-center gap-2 rounded-full bg-ink px-7 py-3.5 text-sm font-medium text-page transition-colors duration-300 hover:bg-ink"
+                  className="inline-flex items-center gap-2 bg-ink px-7 py-3.5 text-sm font-medium text-page transition-colors duration-300 hover:bg-ink"
                 >
                   Start a project
                   <ArrowUpRight size={16} />
@@ -133,7 +133,7 @@ export default function Hero({ started }: HeroProps) {
               <a
                 href="#work"
                 onClick={onAnchorClick}
-                className="inline-flex items-center gap-2 rounded-full border border-ink/20 bg-ink/5 px-7 py-3.5 text-sm text-ink backdrop-blur-md transition-colors duration-300 hover:bg-ink/15"
+                className="inline-flex items-center gap-2 border border-ink/20 bg-ink/5 px-7 py-3.5 text-sm text-ink transition-colors duration-300 hover:bg-ink/15"
               >
                 See the work
               </a>

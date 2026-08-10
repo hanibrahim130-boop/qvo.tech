@@ -139,7 +139,7 @@ export default function Navbar() {
             <Magnetic>
               <a
                 href="mailto:hello@qvo.tech"
-                className="hidden items-center gap-1.5 rounded-full bg-ink px-5 py-2 text-sm font-medium text-black transition-colors duration-300 hover:bg-accent md:inline-flex"
+                className="hidden items-center gap-1.5 bg-ink px-5 py-2 text-sm font-medium text-black transition-colors duration-300 hover:bg-accent md:inline-flex"
               >
                 Start a project
                 <ArrowUpRight size={15} />
@@ -150,7 +150,7 @@ export default function Navbar() {
               onClick={() => setOpen((v) => !v)}
               aria-expanded={open}
               aria-controls="mobile-menu"
-              className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-ink/20 bg-ink/10 backdrop-blur-md md:hidden"
+              className="inline-flex h-10 w-10 items-center justify-center border border-ink/20 bg-ink/10 md:hidden"
             >
               <span className="sr-only">{open ? 'Close menu' : 'Open menu'}</span>
               {open ? (
@@ -193,7 +193,7 @@ export default function Navbar() {
           <a
             data-menu-link
             href="mailto:hello@qvo.tech"
-            className="inline-flex w-max items-center gap-2 rounded-full bg-accent px-6 py-3 text-sm font-medium text-black"
+            className="inline-flex w-max items-center gap-2 bg-accent px-6 py-3 text-sm font-medium text-black"
           >
             Start a project
             <ArrowUpRight size={16} />
