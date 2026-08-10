@@ -38,25 +38,24 @@
     <meta name="twitter:image:alt" content="Cinematic dark hero frame from the QVO scroll-driven website" />
 
     <!--
-      Bricolage Grotesque and Fraunces, both OFL, pinned to 5.3.0 and declared
-      with @font-face in src/index.css. Preloaded here because the browser
-      cannot otherwise discover them until the CSS has been parsed, which
-      shows up as a flash of fallback type across the hero headline.
+      Bricolage Grotesque and Fraunces, both OFL, are installed at exactly
+      5.3.0 and imported in src/index.css. Vite fingerprints these package
+      files and rewrites the preload URLs to the same bundled assets used by
+      the generated CSS, so no third-party origin sits on the render path.
     -->
-    <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin />
     <link
       rel="preload"
       as="font"
       type="font/woff2"
       crossorigin
-      href="https://cdn.jsdelivr.net/npm/@fontsource-variable/bricolage-grotesque@5.3.0/files/bricolage-grotesque-latin-standard-normal.woff2"
+      href="/node_modules/@fontsource-variable/bricolage-grotesque/files/bricolage-grotesque-latin-standard-normal.woff2"
     />
     <link
       rel="preload"
       as="font"
       type="font/woff2"
       crossorigin
-      href="https://cdn.jsdelivr.net/npm/@fontsource-variable/fraunces@5.3.0/files/fraunces-latin-full-italic.woff2"
+      href="/node_modules/@fontsource-variable/fraunces/files/fraunces-latin-full-italic.woff2"
     />
 
     <script type="application/ld+json">

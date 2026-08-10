@@ -9,37 +9,13 @@
   Fraunces carries WONK, which swaps in leaning, bulbous letterforms that no
   amount of CSS can fake.
 
-  Served from jsDelivr at a pinned version rather than bundled, because the
-  repo's lockfile is committed and CI runs `npm ci`. Moving to the Fontsource
-  packages is a one-line change once the lockfile is regenerated locally.
+  Self-hosted from exact Fontsource 5.3.0 packages. Bricolage's standard cut
+  carries all of its registered axes; Fraunces needs the full cuts because
+  they alone carry the custom SOFT and WONK axes used by `.axis-wonk`.
 */
-@font-face {
-  font-family: 'Bricolage Grotesque Variable';
-  font-style: normal;
-  font-display: swap;
-  font-weight: 200 800;
-  font-stretch: 75% 100%;
-  src: url('https://cdn.jsdelivr.net/npm/@fontsource-variable/bricolage-grotesque@5.3.0/files/bricolage-grotesque-latin-standard-normal.woff2')
-    format('woff2');
-}
-
-@font-face {
-  font-family: 'Fraunces Variable';
-  font-style: normal;
-  font-display: swap;
-  font-weight: 100 900;
-  src: url('https://cdn.jsdelivr.net/npm/@fontsource-variable/fraunces@5.3.0/files/fraunces-latin-full-normal.woff2')
-    format('woff2');
-}
-
-@font-face {
-  font-family: 'Fraunces Variable';
-  font-style: italic;
-  font-display: swap;
-  font-weight: 100 900;
-  src: url('https://cdn.jsdelivr.net/npm/@fontsource-variable/fraunces@5.3.0/files/fraunces-latin-full-italic.woff2')
-    format('woff2');
-}
+@import '@fontsource-variable/bricolage-grotesque/standard.css';
+@import '@fontsource-variable/fraunces/full.css';
+@import '@fontsource-variable/fraunces/full-italic.css';
 
 @tailwind base;
 @tailwind components;
