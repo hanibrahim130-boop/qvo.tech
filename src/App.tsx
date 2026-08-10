@@ -22,6 +22,12 @@ const MARQUEE_ITEMS = [
   'Motion & 3D',
 ]
 
+/**
+ * Keeps page-wide orchestration in one composition root so the preloader,
+ * smooth-scroll clock and fixed paper ground each have exactly one owner.
+ * Section components can then manage local choreography without creating
+ * competing global listeners or duplicated infrastructure.
+ */
 export default function App() {
   const [started, setStarted] = useState(false)
 

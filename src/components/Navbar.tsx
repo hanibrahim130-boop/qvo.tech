@@ -12,6 +12,11 @@ const LINKS = [
   { href: '#contact', label: 'Contact' },
 ]
 
+/**
+ * Owns desktop visibility and the mobile overlay together so scroll direction,
+ * document locking and menu choreography cannot disagree about navigation
+ * state. Reduced-motion handling is decided before either animation starts.
+ */
 export default function Navbar() {
   const headerRef = useRef<HTMLElement>(null)
   const overlayRef = useRef<HTMLDivElement>(null)
@@ -19,7 +24,7 @@ export default function Navbar() {
   const openRef = useRef(open)
   openRef.current = open
 
-  // Hide on scroll down, reveal on scroll up, glass background once scrolled.
+  // Hide on scroll down, reveal on scroll up, add opaque paper once scrolled.
   useEffect(() => {
     const header = headerRef.current
     if (!header) return

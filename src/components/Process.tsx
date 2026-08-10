@@ -29,6 +29,11 @@ const STEPS = [
   },
 ]
 
+/**
+ * Converts vertical reading progress into a horizontal sequence only where the
+ * viewport and motion preference can support it. Mobile and reduced-motion
+ * paths keep the same content in document order instead of depending on a pin.
+ */
 export default function Process() {
   const wrapRef = useRef<HTMLElement>(null)
   const trackRef = useRef<HTMLDivElement>(null)

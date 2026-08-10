@@ -13,6 +13,11 @@ const FINE_CELL = 2
 /** Canvases are capped at 2x. Beyond that the dither cells stop reading. */
 const MAX_DPR = 2
 
+/**
+ * Keeps pixel-readable source data separate from layout concerns. The wrapper
+ * owns sizing because its measured box determines canvas resolution, while the
+ * source and accessible description must remain stable across every repaint.
+ */
 interface DitheredImageProps {
   /**
    * Must be same-origin (a path under `public/`). The dither reads pixels
@@ -20,7 +25,9 @@ interface DitheredImageProps {
    * headers taints it and makes `getImageData` throw.
    */
   src: string
+  /** Describes the underlying photograph; the canvas exposes it through `aria-label`. */
   alt: string
+  /** Supplies the aspect ratio and responsive dimensions that the canvas measures. */
   className?: string
 }
 

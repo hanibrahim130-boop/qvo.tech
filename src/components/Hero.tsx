@@ -7,11 +7,20 @@ import { usePrefersReducedMotion } from '../lib/usePrefersReducedMotion'
 import { onAnchorClick } from '../lib/anchors'
 import Magnetic from './Magnetic'
 
+/**
+ * Coordinates the opening timeline with the preloader instead of relying on a
+ * timeout that could race font loading or a slower device.
+ */
 interface HeroProps {
-  /** Flips to true as the preloader lifts; starts the intro timeline. */
+  /** Prevents the headline reveal from completing unseen behind the curtain. */
   started: boolean
 }
 
+/**
+ * Establishes the site's message before any portfolio proof appears. Its
+ * motion is scoped and reversible so reduced-motion visitors and responsive
+ * reflow receive the same readable heading rather than an animation snapshot.
+ */
 export default function Hero({ started }: HeroProps) {
   const sectionRef = useRef<HTMLElement>(null)
   const contentRef = useRef<HTMLDivElement>(null)

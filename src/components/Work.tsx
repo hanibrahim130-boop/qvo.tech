@@ -3,6 +3,11 @@ import { Reveal } from 'scroll-scrub-video'
 import DitheredImage from './DitheredImage'
 import SectionHead from './SectionHead'
 
+/**
+ * Restricts portfolio records to facts the site can substantiate. Omitting a
+ * results field and making links optional prevents layout pressure from turning
+ * missing evidence into invented metrics or destinations.
+ */
 export interface WorkItem {
   id: string
   /** The real client name, spelled the way the client spells it. */
@@ -96,6 +101,11 @@ const WORK: WorkItem[] = [
   },
 ]
 
+/**
+ * Renders verified work through one shared press treatment so very different
+ * client screenshots still belong to the same visual system. Entries without
+ * a confirmed destination remain figures rather than deceptive empty links.
+ */
 export default function Work() {
   return (
     <section id="work" className="px-5 py-28 sm:px-8 md:px-12 md:py-36">

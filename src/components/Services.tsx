@@ -27,6 +27,11 @@ const SERVICES = [
   },
 ]
 
+/**
+ * Keeps capability copy beside one persistent section introduction so the
+ * page reads as a considered offer, not a grid of interchangeable feature
+ * cards. Data stays local because it has no runtime source or reuse elsewhere.
+ */
 export default function Services() {
   return (
     <section id="services" className="border-t border-ink/10 px-5 py-28 sm:px-8 md:px-12 md:py-36">

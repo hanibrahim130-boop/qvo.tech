@@ -9,6 +9,11 @@ const NAV = [
   { href: '#contact', label: 'Contact' },
 ]
 
+/**
+ * Repeats the page's essential routes and direct contact path at the natural
+ * end of the document. Reusing the shared anchor policy keeps footer links and
+ * the back-to-top control functional with or without Lenis.
+ */
 export default function Footer() {
   return (
     <footer className="relative overflow-hidden border-t border-ink/10 px-5 pb-8 pt-16 sm:px-8 md:px-12">

@@ -3,11 +3,21 @@ import { Hexagon } from 'lucide-react'
 import { gsap } from '../lib/gsap'
 import { prefersReducedMotion } from '../lib/usePrefersReducedMotion'
 
+/**
+ * Provides a hand-off signal rather than exposing the preloader timeline. The
+ * parent only needs to know when hero motion may begin, not how the curtain is
+ * animated.
+ */
 interface PreloaderProps {
-  /** Fired as the curtain starts lifting, so the hero intro can overlap it. */
+  /** Starts the hero as the curtain lifts so the two timelines feel continuous. */
   onComplete: () => void
 }
 
+/**
+ * Holds the first paint until the branded hand-off is ready, while immediately
+ * yielding under reduced motion. The callback is kept in a ref so parent
+ * renders cannot restart a one-shot timeline.
+ */
 export default function Preloader({ onComplete }: PreloaderProps) {
   const rootRef = useRef<HTMLDivElement>(null)
   const markRef = useRef<HTMLDivElement>(null)

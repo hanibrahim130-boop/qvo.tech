@@ -28,8 +28,18 @@ const BAYER_8 = new Uint8Array([
   63, 31, 55, 23, 61, 29, 53, 21,
 ])
 
+/**
+ * Immutable channel order used at the renderer boundary. Keeping the tuple
+ * fixed prevents a scroll-frame paint from accidentally mutating the shared
+ * ink or paper token.
+ */
 export type Rgb = readonly [number, number, number]
 
+/**
+ * Art-direction controls for one press plate. Keeping the palette and screen
+ * decisions explicit makes every caller use the same deterministic renderer
+ * rather than layering unrelated CSS effects on individual images.
+ */
 export interface DitherOptions {
   /** Side of one dither cell in device pixels. 1 is fine, 10 is chunky. */
   cell: number
@@ -65,10 +75,11 @@ function clamp01(value: number): number {
 }
 
 /**
- * Draw `source` into `target`, dithered.
- *
- * `target` must already be sized. The source is fitted with a cover crop so
- * the plate never letterboxes.
+ * Rasterises a source into the site's ordered press language. The caller owns
+ * the target size because only the layout layer knows its CSS box and device
+ * pixel ratio; this function owns crop, thresholding and palette so those
+ * visual rules cannot drift between components. A centred cover crop avoids
+ * introducing letterbox colours that are outside the two-ink system.
  */
 export function drawDithered(
   target: HTMLCanvasElement,
@@ -133,7 +144,11 @@ export function drawDithered(
   ctx.drawImage(scratch as HTMLCanvasElement, 0, 0, lowW, lowH, 0, 0, target.width, target.height)
 }
 
-/** Parse `#rrggbb` into an RGB triple. Falls back to black on bad input. */
+/**
+ * Converts authored design-token hex values at module boundaries so the hot
+ * pixel loop can consume numeric channels directly. The deterministic black
+ * fallback keeps a malformed token from producing `NaN` throughout a canvas.
+ */
 export function hexToRgb(hex: string): Rgb {
   const match = /^#?([0-9a-f]{6})$/i.exec(hex.trim())
   if (!match) return [0, 0, 0]

@@ -10,9 +10,10 @@ if (typeof window !== 'undefined') {
 export { gsap, ScrollTrigger }
 
 /**
- * Runs a GSAP setup function inside `gsap.context`, scoped to `scope`, and
- * reverts every tween/ScrollTrigger it created on cleanup. Selector text used
- * inside the callback resolves within the scope element.
+ * Gives each component one scoped owner for GSAP's imperative DOM mutations.
+ * React cannot clean up tweens it did not create, and development Strict Mode
+ * can run effects twice; reverting the context prevents duplicate triggers,
+ * stale inline styles and selectors leaking into neighbouring sections.
  */
 export function useGsapContext(
   setup: (ctx: gsap.Context) => void,

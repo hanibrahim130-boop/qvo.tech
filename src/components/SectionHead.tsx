@@ -1,14 +1,27 @@
 import type { ReactNode } from 'react'
 import { Reveal } from 'scroll-scrub-video'
 
+/**
+ * Keeps section hierarchy consistent while allowing each title to carry real
+ * inline emphasis. The contract separates navigational numbering from visible
+ * copy so neither has to be parsed out of a single string.
+ */
 interface SectionHeadProps {
+  /** Printed sequence marker used to orient long-page scanning. */
   index: string
+  /** Short eyebrow that names the section independently of its headline. */
   label: string
+  /** Rich heading content, including the deliberate Fraunces emphasis runs. */
   title: ReactNode
+  /** Lets a section position the shared opener without forking its typography. */
   className?: string
 }
 
-/** Consistent section opener: `04 — LABEL` eyebrow plus a large display title. */
+/**
+ * Centralises the repeated eyebrow-and-title rhythm so visual hierarchy cannot
+ * drift as sections evolve. `ReactNode` titles preserve semantic emphasis
+ * instead of forcing callers to inject HTML strings.
+ */
 export default function SectionHead({ index, label, title, className }: SectionHeadProps) {
   return (
     <div className={className}>

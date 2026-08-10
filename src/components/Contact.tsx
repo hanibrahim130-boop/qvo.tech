@@ -7,6 +7,12 @@ import type { SplitResult } from '../lib/splitText'
 import { usePrefersReducedMotion } from '../lib/usePrefersReducedMotion'
 import Magnetic from './Magnetic'
 
+/**
+ * Ends the page with a direct email action rather than a decorative conversion
+ * form. The heading keeps the same reversible split-text treatment as the hero
+ * so motion can add emphasis without leaving accessibility-hostile wrappers in
+ * the final DOM.
+ */
 export default function Contact() {
   const sectionRef = useRef<HTMLElement>(null)
   const headingRef = useRef<HTMLHeadingElement>(null)
@@ -42,10 +48,7 @@ export default function Contact() {
       ref={sectionRef}
       className="relative overflow-hidden border-t border-ink/10 px-5 py-32 text-center sm:px-8 md:px-12 md:py-44"
     >
-      {/*
-        The local glow is gone. This is the brightest chapter of the global
-        backdrop, so the bloom behind this section is the film itself.
-      */}
+      {/* Scale and whitespace carry the finale; it needs no local visual effect. */}
 
       <Reveal>
         <p className="font-mono text-[11px] uppercase tracking-[0.25em] text-ink/50">

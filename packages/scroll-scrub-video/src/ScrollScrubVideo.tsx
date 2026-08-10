@@ -2,29 +2,36 @@ import { useCallback, useEffect, useRef } from 'react'
 import type { CSSProperties, RefObject } from 'react'
 import { useScrollProgress } from './useScrollProgress'
 
+/**
+ * Separates media, scroll ownership and decoder tuning so the component can be
+ * reused without assuming a page structure. Defaults favour stable seeking;
+ * callers only override them when their encoded clip requires different costs.
+ */
 export interface ScrollScrubVideoProps {
-	/** Video source URL. Short, well-keyframed MP4 or WebM files scrub best. */
+	/** Short, well-keyframed media keeps random seeks from decoding long frame chains. */
 	src: string
-	/** Poster image shown until the first frame has decoded. */
+	/** Prevents an empty surface while metadata and the first seek become available. */
 	poster?: string
 	/**
 	 * The scrollable element that drives playback. Omit it to use the document
 	 * scroll on `window`.
 	 */
 	scrollRef?: RefObject<HTMLElement | null> | null
-	/** Per-frame easing factor between 0 and 1. Defaults to `0.18`. */
+	/** Trades immediate tracking for a heavier visual response. Defaults to `0.18`. */
 	smoothing?: number
 	/**
-	 * Minimum milliseconds between seeks. Lower values look smoother but cost
-	 * more decoding work. Defaults to `33` (roughly 30fps).
+	 * Bounds decoder pressure independently of scroll event frequency. Defaults
+	 * to `33` (roughly 30 seeks per second).
 	 */
 	seekThrottleMs?: number
 	/**
-	 * When true (the default), the video stays on its first frame for visitors
-	 * who ask for reduced motion.
+	 * Keeps a stable first frame for visitors who ask for reduced motion instead
+	 * of translating scroll into rapid temporal changes. Defaults to true.
 	 */
 	respectReducedMotion?: boolean
+	/** Lets the host position the absolutely filled video through its own CSS system. */
 	className?: string
+	/** Provides an escape hatch for host layout without exposing internal seek state. */
 	style?: CSSProperties
 }
 

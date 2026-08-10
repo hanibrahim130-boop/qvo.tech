@@ -38,6 +38,11 @@ const PRINCIPLES = [
 const STATEMENT =
   'We are a small, senior team that takes on a handful of projects a year and gives each one everything: strategy with teeth, design with a point of view, and engineering that makes the whole thing feel effortless.'
 
+/**
+ * Builds trust from operating principles and a real studio plate rather than
+ * unverifiable counters or testimonials. Word-level scroll emphasis supports
+ * the statement, then reverts so the final copy remains ordinary semantic text.
+ */
 export default function Studio() {
   const sectionRef = useRef<HTMLElement>(null)
   const statementRef = useRef<HTMLParagraphElement>(null)
