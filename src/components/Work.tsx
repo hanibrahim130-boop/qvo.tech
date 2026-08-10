@@ -42,7 +42,7 @@ const WORK: WorkItem[] = [
     summary:
       'Exclusive brokerage and property advisory across residential, commercial and investment assets. The site carries listings, land, and international investment as separate routes, and hands every enquiry straight to WhatsApp.',
     image: '/work/white.webp',
-    alt: 'White Real Estate Group homepage: an aerial photograph of a Beirut marina full of yachts, with the wordmark set across it.',
+    alt: 'White Real Estate Group homepage: an aerial photograph of a marina full of yachts, with the wordmark set across it.',
   },
   {
     id: 'brandi',
@@ -82,7 +82,7 @@ const WORK: WorkItem[] = [
     summary:
       'A small, tightly edited fashion boutique delivering across Lebanon. The whole storefront is arranged around one promise the owner can actually keep: chosen with care, ordered in a tap.',
     image: '/work/mofa.webp',
-    alt: 'Mofa Boutique homepage: a cream page with a rail of pale dresses photographed against a white wall.',
+    alt: 'Mofa Boutique homepage: a cream page with a rail of white, brown and black garments photographed against a white wall.',
   },
   {
     id: 'mouttahed',
@@ -92,7 +92,7 @@ const WORK: WorkItem[] = [
     summary:
       'Youth basketball on the Al Mouttahed Tripoli club pathway, from Mini Basket through U18. Bilingual, photographed with the academy\u2019s own teams rather than stock, and every route ends at booking a trial on WhatsApp.',
     image: '/work/mouttahed.webp',
-    alt: 'Mouttahed Basketball Academy homepage: the U18 girls team celebrating on court beside the line Where champions begin.',
+    alt: 'Mouttahed Basketball Academy homepage: the U18 girls team raising their arms on court beside the line Where champions begin.',
   },
 ]
 
