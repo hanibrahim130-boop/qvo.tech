@@ -44,7 +44,7 @@ export default function App() {
     <>
       <Preloader onComplete={() => setStarted(true)} />
       <Cursor />
-      {/* One film behind every section. Sits at z-0; the page rides above it. */}
+      {/* Static paste-up grid at z-0; the page content stays above it. */}
       <GlobalBackdrop />
       <Navbar />
       <div className="relative z-10">

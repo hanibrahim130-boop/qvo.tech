@@ -88,10 +88,9 @@ export default function Hero({ started }: HeroProps) {
       className="relative flex h-[100svh] min-h-[640px] flex-col overflow-hidden"
     >
       {/*
-        No local backdrop and no floor fade. GlobalBackdrop paints this section
-        and every section after it, so the film runs through unbroken. The
-        gradient that used to sit here faded the hero into the showreel; with
-        that section gone it only laid an opaque band over the video.
+        GlobalBackdrop owns the shared paper and registration grid. Keeping the
+        hero transparent lets that page ground continue through every section
+        instead of boxing the opening into a separate piece of artwork.
       */}
       <div
         ref={contentRef}
