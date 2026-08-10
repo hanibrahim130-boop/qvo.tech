@@ -40,7 +40,7 @@ export default function Contact() {
     <section
       id="contact"
       ref={sectionRef}
-      className="relative overflow-hidden border-t border-white/10 px-5 py-32 text-center sm:px-8 md:px-12 md:py-44"
+      className="relative overflow-hidden border-t border-ink/10 px-5 py-32 text-center sm:px-8 md:px-12 md:py-44"
     >
       {/*
         The local glow is gone. This is the brightest chapter of the global
@@ -48,14 +48,14 @@ export default function Contact() {
       */}
 
       <Reveal>
-        <p className="font-mono text-[11px] uppercase tracking-[0.25em] text-white/50">
+        <p className="font-mono text-[11px] uppercase tracking-[0.25em] text-ink/50">
           Have a project in mind?
         </p>
       </Reveal>
 
       <h2
         ref={headingRef}
-        className="mx-auto mt-8 max-w-4xl font-display text-[clamp(2.75rem,8vw,7rem)] font-medium leading-[1.0] tracking-tight text-white"
+        className="mx-auto mt-8 max-w-4xl font-display text-[clamp(2.75rem,8vw,7rem)] font-medium leading-[1.0] tracking-tight text-ink"
       >
         Let&rsquo;s make your brand <em className="font-serif font-normal italic text-accent">matter.</em>
       </h2>
@@ -65,7 +65,7 @@ export default function Contact() {
           <Magnetic strength={0.4}>
             <a
               href="mailto:hello@qvo.tech"
-              className="inline-flex items-center gap-2.5 rounded-full bg-lavender px-9 py-4 text-base font-medium text-page transition-colors duration-300 hover:bg-white sm:px-10 sm:py-5"
+              className="inline-flex items-center gap-2.5 rounded-full bg-ink px-9 py-4 text-base font-medium text-page transition-colors duration-300 hover:bg-ink sm:px-10 sm:py-5"
             >
               Book a call
               <ArrowUpRight size={18} />
@@ -73,11 +73,11 @@ export default function Contact() {
           </Magnetic>
           <a
             href="mailto:hello@qvo.tech"
-            className="text-sm text-white/55 underline decoration-white/20 underline-offset-4 transition-colors duration-300 hover:text-white"
+            className="text-sm text-ink/55 underline decoration-ink/20 underline-offset-4 transition-colors duration-300 hover:text-ink"
           >
             hello@qvo.tech
           </a>
-          <p className="inline-flex items-center gap-2 font-mono text-[11px] uppercase tracking-[0.2em] text-white/45">
+          <p className="inline-flex items-center gap-2 font-mono text-[11px] uppercase tracking-[0.2em] text-ink/45">
             <span className="h-1.5 w-1.5 rounded-full bg-accent motion-safe:animate-pulse" aria-hidden="true" />
             Now booking — Q4 2026
           </p>

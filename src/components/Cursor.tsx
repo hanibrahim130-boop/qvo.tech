@@ -75,11 +75,11 @@ export default function Cursor() {
     <div aria-hidden="true" className="hidden md:block">
       <div
         ref={dotRef}
-        className="pointer-events-none fixed left-0 top-0 z-[210] h-1.5 w-1.5 rounded-full bg-white mix-blend-difference"
+        className="pointer-events-none fixed left-0 top-0 z-[210] h-1.5 w-1.5 rounded-full bg-ink mix-blend-difference"
       />
       <div
         ref={ringRef}
-        className="pointer-events-none fixed left-0 top-0 z-[200] h-9 w-9 rounded-full border border-white/70 mix-blend-difference"
+        className="pointer-events-none fixed left-0 top-0 z-[200] h-9 w-9 rounded-full border border-ink/70 mix-blend-difference"
       />
     </div>
   )

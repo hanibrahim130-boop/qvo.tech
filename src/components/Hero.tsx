@@ -98,16 +98,16 @@ export default function Hero({ started }: HeroProps) {
         className="relative z-10 flex flex-1 flex-col justify-end px-5 pb-8 pt-28 sm:px-8 md:px-12"
       >
         <div>
-          <div data-hero-fade className="mb-6 inline-flex items-center gap-2.5 rounded-full border border-white/15 bg-white/5 px-4 py-2 backdrop-blur-md">
+          <div data-hero-fade className="mb-6 inline-flex items-center gap-2.5 rounded-full border border-ink/15 bg-ink/5 px-4 py-2 backdrop-blur-md">
             <span className="h-1.5 w-1.5 rounded-full bg-accent motion-safe:animate-pulse" aria-hidden="true" />
-            <span className="font-mono text-[11px] uppercase tracking-[0.2em] text-white/70">
+            <span className="font-mono text-[11px] uppercase tracking-[0.2em] text-ink/70">
               Independent web design studio
             </span>
           </div>
 
           <h1
             ref={headlineRef}
-            className={`max-w-5xl font-display text-[clamp(3rem,9.5vw,8.75rem)] font-medium leading-[0.98] tracking-[-0.02em] text-white ${
+            className={`max-w-5xl font-display text-[clamp(3rem,9.5vw,8.75rem)] font-medium leading-[0.98] tracking-[-0.02em] text-ink ${
               reduced ? '' : 'opacity-0'
             }`}
           >
@@ -115,7 +115,7 @@ export default function Hero({ started }: HeroProps) {
           </h1>
 
           <div className="mt-8 flex flex-col gap-8 md:flex-row md:items-end md:justify-between">
-            <p data-hero-fade className="max-w-md text-base leading-relaxed text-white/65 sm:text-lg">
+            <p data-hero-fade className="max-w-md text-base leading-relaxed text-ink/65 sm:text-lg">
               QVO crafts considered digital experiences that make ambitious brands clear,
               credible, and impossible to ignore.
             </p>
@@ -124,7 +124,7 @@ export default function Hero({ started }: HeroProps) {
               <Magnetic>
                 <a
                   href="mailto:hello@qvo.tech"
-                  className="inline-flex items-center gap-2 rounded-full bg-lavender px-7 py-3.5 text-sm font-medium text-page transition-colors duration-300 hover:bg-white"
+                  className="inline-flex items-center gap-2 rounded-full bg-ink px-7 py-3.5 text-sm font-medium text-page transition-colors duration-300 hover:bg-ink"
                 >
                   Start a project
                   <ArrowUpRight size={16} />
@@ -133,7 +133,7 @@ export default function Hero({ started }: HeroProps) {
               <a
                 href="#work"
                 onClick={onAnchorClick}
-                className="inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/5 px-7 py-3.5 text-sm text-white backdrop-blur-md transition-colors duration-300 hover:bg-white/15"
+                className="inline-flex items-center gap-2 rounded-full border border-ink/20 bg-ink/5 px-7 py-3.5 text-sm text-ink backdrop-blur-md transition-colors duration-300 hover:bg-ink/15"
               >
                 See the work
               </a>
@@ -143,7 +143,7 @@ export default function Hero({ started }: HeroProps) {
 
         <div
           data-hero-fade
-          className="mt-12 flex items-center justify-between border-t border-white/10 pt-5 font-mono text-[11px] uppercase tracking-[0.2em] text-white/45"
+          className="mt-12 flex items-center justify-between border-t border-ink/10 pt-5 font-mono text-[11px] uppercase tracking-[0.2em] text-ink/45"
         >
           <span className="inline-flex items-center gap-2">
             Scroll to explore

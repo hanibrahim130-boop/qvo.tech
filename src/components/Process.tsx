@@ -69,7 +69,7 @@ export default function Process() {
     <section
       ref={wrapRef}
       aria-label="Process"
-      className={`relative border-t border-white/10 ${horizontal ? 'md:h-[300vh]' : ''}`}
+      className={`relative border-t border-ink/10 ${horizontal ? 'md:h-[300vh]' : ''}`}
     >
       <div
         className={`${
@@ -83,14 +83,14 @@ export default function Process() {
           }`}
         >
           <div className={horizontal ? 'md:w-[38vw] md:shrink-0' : ''}>
-            <div className="flex items-center gap-4 font-mono text-[11px] uppercase tracking-[0.25em] text-white/50">
+            <div className="flex items-center gap-4 font-mono text-[11px] uppercase tracking-[0.25em] text-ink/50">
               <span className="text-accent">—</span>
               <span>How we work</span>
             </div>
-            <h2 className="mt-6 font-display text-[clamp(2.5rem,5.5vw,4.5rem)] font-medium leading-[1.02] tracking-tight text-white">
+            <h2 className="mt-6 font-display text-[clamp(2.5rem,5.5vw,4.5rem)] font-medium leading-[1.02] tracking-tight text-ink">
               A process built for <em className="font-serif font-normal italic text-accent">momentum.</em>
             </h2>
-            <p className="mt-6 hidden max-w-sm text-sm text-white/55 md:block">
+            <p className="mt-6 hidden max-w-sm text-sm text-ink/55 md:block">
               Four phases, zero mystery — keep scrolling.
             </p>
           </div>
@@ -98,7 +98,7 @@ export default function Process() {
           {STEPS.map((step) => (
             <article
               key={step.index}
-              className={`border-l border-white/10 pl-8 ${
+              className={`border-l border-ink/10 pl-8 ${
                 horizontal ? 'md:w-[42vw] md:shrink-0 lg:w-[34vw]' : ''
               }`}
             >
@@ -108,17 +108,17 @@ export default function Process() {
               >
                 {step.index}
               </span>
-              <h3 className="mt-5 font-display text-2xl font-medium tracking-tight text-white sm:text-3xl">
+              <h3 className="mt-5 font-display text-2xl font-medium tracking-tight text-ink sm:text-3xl">
                 {step.title}
               </h3>
-              <p className="mt-3 max-w-md text-sm leading-relaxed text-white/60 sm:text-base">
+              <p className="mt-3 max-w-md text-sm leading-relaxed text-ink/60 sm:text-base">
                 {step.copy}
               </p>
               <ul className="mt-5 flex flex-col gap-2">
                 {step.points.map((point) => (
                   <li
                     key={point}
-                    className="flex items-center gap-2.5 font-mono text-[11px] uppercase tracking-[0.15em] text-white/45"
+                    className="flex items-center gap-2.5 font-mono text-[11px] uppercase tracking-[0.15em] text-ink/45"
                   >
                     <span className="h-1 w-1 rounded-full bg-accent" aria-hidden="true" />
                     {point}
