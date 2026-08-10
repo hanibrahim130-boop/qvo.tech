@@ -10,7 +10,7 @@
     />
     <link rel="canonical" href="https://qvo.tech/" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <meta name="theme-color" content="#0a0a0a" />
+    <meta name="theme-color" content="#EDE9E1" />
 
     <!-- Open Graph -->
     <meta property="og:type" content="website" />
@@ -37,12 +37,27 @@
     <meta name="twitter:image" content="https://qvo.tech/hero-poster.jpg" />
     <meta name="twitter:image:alt" content="Cinematic dark hero frame from the QVO scroll-driven website" />
 
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <!--
+      Bricolage Grotesque and Fraunces, both OFL, pinned to 5.3.0 and declared
+      with @font-face in src/index.css. Preloaded here because the browser
+      cannot otherwise discover them until the CSS has been parsed, which
+      shows up as a flash of fallback type across the hero headline.
+    -->
+    <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Instrument+Serif:ital,wght@0,400;1,400&family=Space+Grotesk:wght@400;500;600;700&display=swap"
-      rel="stylesheet"
-    >
+      rel="preload"
+      as="font"
+      type="font/woff2"
+      crossorigin
+      href="https://cdn.jsdelivr.net/npm/@fontsource-variable/bricolage-grotesque@5.3.0/files/bricolage-grotesque-latin-standard-normal.woff2"
+    />
+    <link
+      rel="preload"
+      as="font"
+      type="font/woff2"
+      crossorigin
+      href="https://cdn.jsdelivr.net/npm/@fontsource-variable/fraunces@5.3.0/files/fraunces-latin-full-italic.woff2"
+    />
 
     <script type="application/ld+json">
       {
