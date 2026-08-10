@@ -46,7 +46,6 @@ export default function App() {
       <Cursor />
       {/* One film behind every section. Sits at z-0; the page rides above it. */}
       <GlobalBackdrop />
-      <div className="noise-overlay" aria-hidden="true" />
       <Navbar />
       <div className="relative z-10">
         <main>
