@@ -24,7 +24,7 @@ export default function Footer() {
             <span className="font-display text-lg font-medium tracking-tight text-ink">qvo.tech</span>
           </div>
           <p className="mt-4 max-w-xs text-sm leading-relaxed text-ink/55">
-            Web design for ambitious brands — strategy, identity and websites with cinematic motion.
+            Web design for ambitious brands — strategy, identity and websites with purposeful motion.
           </p>
         </div>
 

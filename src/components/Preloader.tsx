@@ -81,7 +81,7 @@ export default function Preloader({ onComplete }: PreloaderProps) {
     >
       <div className="flex items-center justify-between font-mono text-[11px] uppercase tracking-[0.2em] text-ink/40">
         <span>QVO — Studio</span>
-        <span>Est. 2026</span>
+        <span>Lebanon</span>
       </div>
 
       <div ref={markRef} className="flex items-center justify-center gap-3">

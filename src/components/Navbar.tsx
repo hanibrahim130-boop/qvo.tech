@@ -6,7 +6,7 @@ import { prefersReducedMotion } from '../lib/usePrefersReducedMotion'
 import Magnetic from './Magnetic'
 
 const LINKS = [
-  { href: '#work', label: 'Work', sup: '04' },
+  { href: '#work', label: 'Work', sup: '06' },
   { href: '#services', label: 'Services' },
   { href: '#studio', label: 'Studio' },
   { href: '#contact', label: 'Contact' },

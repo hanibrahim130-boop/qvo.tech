@@ -18,7 +18,7 @@ const STEPS = [
   {
     index: '03',
     title: 'Build',
-    copy: 'The design ships exactly as approved — fast, accessible and animated at a full 60fps.',
+    copy: 'The design ships as approved — fast, accessible and with motion engineered as part of the build.',
     points: ['Modern stack build', 'WebGL & scroll motion', 'CMS & integrations'],
   },
   {

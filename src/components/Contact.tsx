@@ -81,8 +81,8 @@ export default function Contact() {
             hello@qvo.tech
           </a>
           <p className="inline-flex items-center gap-2 font-mono text-[11px] uppercase tracking-[0.2em] text-ink/45">
-            <span className="h-1.5 w-1.5 bg-accent motion-safe:animate-pulse" aria-hidden="true" />
-            Now booking — Q4 2026
+            <span className="h-1.5 w-1.5 bg-accent" aria-hidden="true" />
+            Based in Lebanon
           </p>
         </div>
       </Reveal>

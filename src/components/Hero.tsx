@@ -158,7 +158,7 @@ export default function Hero({ started }: HeroProps) {
             <ArrowDown size={13} className="motion-safe:animate-bounce" aria-hidden="true" />
           </span>
           <span className="hidden sm:block">Design × Engineering × Motion</span>
-          <span>Est. 2026</span>
+          <span>Lebanon</span>
         </div>
       </div>
     </section>
