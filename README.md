@@ -1,216 +1,234 @@
 # QVO — qvo.tech
 
-**Web design for ambitious brands.** QVO is an open-source, scroll-driven marketing website built with React 19, TypeScript, Vite and Tailwind CSS. The repository holds the full front-end codebase for [qvo.tech](https://qvo.tech): a dark, cinematic single-page experience with a generative WebGL hero, a scroll-scrubbed showreel, smooth scrolling, and GSAP-driven scroll choreography from the preloader to the footer.
+![QVO paper share card reading Design that drives growth in black and red letterpress typography](public/qvo-share.jpg)
 
-The motion primitives behind that experience are published from this repository as a standalone, reusable package — see [`packages/scroll-scrub-video`](packages/scroll-scrub-video).
+[QVO](https://qvo.tech) is a web design studio in Lebanon. This repository
+contains its single-page React site and the source of the reusable
+[`scroll-scrub-video`](packages/scroll-scrub-video) package.
 
----
+The current site is a warm-paper, two-ink system: sharp geometry, variable type,
+ruled paste-up grids and portfolio photography developed into ordered dither
+plates. It does **not** use the former WebGL hero or scroll-scrubbed video
+backdrop.
+
+## Visual system
+
+| Token | Value | Role |
+| --- | --- | --- |
+| `page` | `#EDE9E1` | Primary paper |
+| `panel` | `#E2DCD0` | Secondary paper |
+| `ink` | `#141210` | Type, rules and dark controls |
+| `accent` | `#C0301A` | Signal red |
+| `brand` | `#8C8375` | Muted supporting tone |
+
+- **Display and body:** Bricolage Grotesque Variable
+- **Serif emphasis:** Fraunces Variable
+- **Font delivery:** exact Fontsource `5.3.0` packages, bundled by Vite; no font
+  CDN sits on the critical render path
+- **Geometry:** square controls, flat colour and hairline rules; no
+  glassmorphism or decorative pill system
+
+Width variants use `font-stretch`, not `font-variation-settings`, because the
+latter resets every unnamed variable-font axis and would silently cancel
+Tailwind's `font-weight`. `.axis-wonk` is the deliberate exception: Fraunces'
+custom `SOFT` and `WONK` axes have no dedicated CSS properties, so that utility
+restates every axis it needs.
+
+The canonical tokens and font families live in
+[`tailwind.config.cjs`](tailwind.config.cjs). Axis utilities and global browser
+behaviour live in [`src/index.css`](src/index.css).
+
+## What the site does
+
+The page is assembled in [`src/App.tsx`](src/App.tsx) in this order:
+
+1. **Hero** — the current proposition, direct contact action and selected-work
+   anchor.
+2. **Marquee** — a compact capability index.
+3. **Work** — verified portfolio records rendered as dithered press plates.
+4. **Services** — web design, web development and digital strategy.
+5. **Process** — a horizontal desktop sequence that remains a normal vertical
+   document on mobile and under reduced motion.
+6. **Studio** — operating principles and a same-origin studio photograph,
+   without invented counters or testimonials.
+7. **Contact** — a direct email action.
+8. **Footer** — section navigation, package link and back-to-top control.
+
+Page-wide layers have one owner each:
+
+- [`GlobalBackdrop.tsx`](src/components/GlobalBackdrop.tsx) draws a fixed,
+  non-animated paste-up grid with CSS rules and trim marks.
+- [`Navbar.tsx`](src/components/Navbar.tsx) owns desktop hide/reveal behaviour,
+  the mobile menu and document locking.
+- [`Preloader.tsx`](src/components/Preloader.tsx) hands its one-shot timeline to
+  the hero instead of making the hero guess when to begin.
+- [`Cursor.tsx`](src/components/Cursor.tsx) replaces the native cursor only for
+  precise pointers and only when reduced motion is not requested.
+
+## Dither engine
+
+Portfolio and studio images are rendered by
+[`DitheredImage.tsx`](src/components/DitheredImage.tsx) through the ordered Bayer
+renderer in [`src/lib/dither.ts`](src/lib/dither.ts).
+
+A plate enters as a coarse one-bit screen and resolves to a fine four-tone
+ink-to-paper ramp as it crosses the viewport. Rendering is coalesced through one
+animation frame, canvas resolution is capped at 2× device pixel ratio, and
+reduced-motion visitors receive the fully developed plate immediately.
+
+Image sources must be same-origin because the renderer reads pixels back from a
+canvas. Put portfolio sources under `public/work/`; an arbitrary remote URL will
+taint the canvas and block `getImageData()`.
+
+The algorithm, tuning values, source constraints and verification checklist are
+documented in [`docs/dither-engine.md`](docs/dither-engine.md).
+
+## Motion and accessibility
+
+- Lenis and GSAP share one ticker so smooth scrolling and ScrollTrigger do not
+  drift into separate frame loops.
+- `useGsapContext` scopes imperative animation and reverts it on teardown,
+  including React development Strict Mode reruns.
+- Split-text helpers restore the original semantic markup after one-shot
+  animation instead of leaving measurement wrappers in the document.
+- `prefers-reduced-motion` disables smooth scrolling, pinned horizontal motion,
+  custom cursor motion and animated plate development.
+- Dither canvases expose the source description with `role="img"` and
+  `aria-label`.
+- Work entries without a confirmed URL render as figures, not misleading links.
 
 ## Reusable package: `scroll-scrub-video`
 
-The scroll-scrubbed video layer and the reveal-on-scroll wrapper are framework-agnostic and useful well beyond this site, so they live on their own in [`packages/scroll-scrub-video`](packages/scroll-scrub-video). No Tailwind, no CSS import, no runtime dependency beyond React.
+[`packages/scroll-scrub-video`](packages/scroll-scrub-video) remains a separate
+React package with no Tailwind or site-CSS dependency.
 
-| Export | What it does |
+| Export | Purpose |
 | --- | --- |
-| `ScrollScrubVideo` | Maps scroll progress onto `video.currentTime` so scrolling seeks the footage instead of playing it. Throttled seeking, poster fallback, iOS decoder priming. |
-| `Reveal` | `IntersectionObserver` wrapper that fades and lifts children into view with a configurable delay, distance, duration and threshold. |
-| `useScrollProgress` | The underlying hook: normalised `0…1` scroll progress with per-frame smoothing, for any element or the window. |
+| `Reveal` | IntersectionObserver fade-and-lift wrapper with reduced-motion and no-observer fallbacks |
+| `useScrollProgress` | Smoothed, normalised scroll progress for a container or the document |
+| `ScrollScrubVideo` | Maps scroll progress onto a well-keyframed video's playhead |
 
-All three honour `prefers-reduced-motion`. Full API reference, usage examples and video-encoding tips are in the [package README](packages/scroll-scrub-video/README.md).
+The QVO site currently consumes **`Reveal` only**. `ScrollScrubVideo` is a
+package API, not the site's background implementation. Package usage and
+encoding guidance live in the
+[package README](packages/scroll-scrub-video/README.md).
 
----
-
-## Highlights
-
-- **Generative 3D hero** — a noise-displaced, faceted Three.js orb with an electric rim light, particle field and wireframe shell; it reacts to the pointer and the first viewport of scroll, pauses off-screen, and is lazy-loaded in its own chunk.
-- **Scroll-scrubbed showreel** — a pinned, full-viewport video whose playhead is driven by scroll, the technique extracted into the `scroll-scrub-video` package.
-- **Scroll choreography throughout** — masked split-text headlines, a word-by-word brightening studio statement, animated stat counters, thumbnail parallax and a horizontally-scrolling process section, all on GSAP ScrollTrigger + Lenis smooth scroll.
-- **Micro-interactions** — branded preloader, custom blend-mode cursor, magnetic buttons, hide-on-scroll navbar with a full-screen staggered mobile menu, infinite marquee.
-- **Dark design-token base** — the `page` color (`#0a0a0a`) and `accent` (`#D9FF3F`) tokens, Space Grotesk display type with Instrument Serif italic accents over an Inter body.
-- **Accessible by default** — every effect degrades under `prefers-reduced-motion`: no smooth scroll or pinning, a static 3D frame, final counter values, and full content with no JS-gated visibility.
-
----
-
-## Tech stack
+## Stack
 
 | Layer | Choice |
 | --- | --- |
-| Framework | React 19 |
-| Language | TypeScript |
-| Build tool | Vite |
-| Styling | Tailwind CSS 3 + PostCSS / Autoprefixer |
-| 3D | Three.js (vanilla, lazy-loaded) |
-| Animation | GSAP 3 + ScrollTrigger |
-| Smooth scroll | Lenis |
+| UI | React 19 |
+| Language | TypeScript 7, strict mode |
+| Build | Vite 8 |
+| Styling | Tailwind CSS 3 + PostCSS + Autoprefixer |
+| Motion | GSAP 3, ScrollTrigger and Lenis |
 | Icons | lucide-react |
-| Fonts | Space Grotesk, Instrument Serif, Inter (Google Fonts) |
-
----
+| Fonts | Bricolage Grotesque Variable and Fraunces Variable via Fontsource |
+| Workspace package build | tsup + TypeScript declarations |
 
 ## Getting started
 
 ### Prerequisites
 
-- Node.js 18 or newer
-- npm (or pnpm / yarn / bun)
+- Node.js **20.19 or newer** — Vite 8 does not run on Node 18
+- npm with lockfile support
 
 ### Install and run
 
 ```bash
 git clone https://github.com/hanibrahim130-boop/qvo.tech.git
 cd qvo.tech
-npm install
+npm ci
 npm run dev
 ```
 
-Vite prints a local URL (usually `http://localhost:5173`). Open it in your browser.
+The development server listens on `http://localhost:5199` and is exposed to the
+local network by [`vite.config.ts`](vite.config.ts).
 
-### Scripts
+### Commands
 
-| Command | What it does |
+| Command | Purpose |
 | --- | --- |
-| `npm run dev` | Start the Vite dev server with hot module replacement |
-| `npm run build` | Type-check with `tsc`, then produce a production bundle in `dist/` |
-| `npm run build -w scroll-scrub-video` | Build the package's ESM, CJS, and declaration files into `packages/scroll-scrub-video/dist/` |
-| `npm run preview` | Serve the built `dist/` folder locally to sanity-check the production build |
+| `npm run dev` | Start Vite with hot module replacement |
+| `npm run build` | Type-check the site, then write the production bundle to `dist/` |
+| `npm run preview` | Serve the built site for a production smoke test |
+| `npm run build -w scroll-scrub-video` | Build the package's ESM, CJS and declaration outputs |
 
-### Deploying
+Before any commit, run the same clean-install sequence as CI:
 
-`npm run build` outputs a static site to `dist/`. Any static host works — Vercel, Netlify, Cloudflare Pages, GitHub Pages, or plain object storage behind a CDN.
-
-- Build command: `npm run build`
-- Output directory: `dist`
-
----
-
-## Project structure
-
+```bash
+npm ci && npm run build && npm run build -w scroll-scrub-video
 ```
+
+`package.json` and `package-lock.json` must move together. Use npm commands to
+change dependencies; do not hand-edit one manifest without regenerating the
+other.
+
+## Repository map
+
+```text
 .
-├── index.html                       # HTML shell: SEO/social meta tags, JSON-LD, Inter font preconnect
+├── index.html                         # SEO, social metadata, JSON-LD, font preloads
 ├── public/
-│   ├── favicon.svg                  # Hexagon favicon matching the navbar logo
-│   ├── hero-poster.jpg              # Poster frame shown before the scroll video is ready
-│   ├── robots.txt                   # Crawler policy, points at the sitemap
-│   ├── sitemap.xml                  # Single-URL sitemap for qvo.tech
-│   └── studio-portrait.webp         # Self-hosted studio consultation image
+│   ├── qvo-share.jpg                  # 1200×630 Open Graph/Twitter image
+│   ├── studio-portrait.webp           # Same-origin studio plate source
+│   └── work/*.webp                    # Same-origin portfolio plate sources
+├── docs/
+│   └── dither-engine.md               # Bayer pipeline and image constraints
 ├── src/
-│   ├── main.tsx                     # React entry point, mounts <App /> into #root
-│   ├── App.tsx                      # Page composition, preloader gate, Lenis boot
-│   ├── index.css                    # Tailwind layers, tokens, split-text/cursor/noise utilities
-│   ├── vite-env.d.ts                # Vite ambient type declarations
-│   ├── lib/
-│   │   ├── gsap.ts                  # GSAP + ScrollTrigger registration, context hook
-│   │   ├── useLenis.ts              # Lenis ↔ GSAP ticker wiring, scrollTo helper
-│   │   ├── splitText.ts             # Dependency-free word/line splitter for masked reveals
-│   │   ├── anchors.ts               # Smooth same-page anchor navigation
-│   │   └── usePrefersReducedMotion.ts
-│   └── components/
-│       ├── Preloader.tsx            # Branded counter intro that gates the hero
-│       ├── Cursor.tsx               # Custom blend-mode cursor (fine pointers only)
-│       ├── Navbar.tsx               # Hide-on-scroll nav + full-screen mobile menu
-│       ├── Hero.tsx                 # Split-line headline intro, CTAs, scroll dim
-│       ├── Hero3D.tsx               # Lazy Three.js scene (orb, particles, shaders)
-│       ├── Marquee.tsx              # Infinite service marquee
-│       ├── Showreel.tsx             # Pinned scroll-scrubbed video section
-│       ├── Work.tsx                 # Case studies (placeholder content, gradient art)
-│       ├── Services.tsx             # Sticky intro + capability rows
-│       ├── Process.tsx              # Horizontal-scroll process (stacks on mobile)
-│       ├── Studio.tsx               # Statement scrub, stat counters, testimonials
-│       ├── Contact.tsx              # Giant split-reveal CTA
-│       ├── Footer.tsx               # Nav, package credit, back-to-top
-│       ├── Magnetic.tsx             # Pointer-gravity wrapper for buttons
-│       └── SectionHead.tsx          # Shared section opener
+│   ├── App.tsx                        # Page composition and global orchestration
+│   ├── index.css                      # Font imports, axis utilities and global CSS
+│   ├── components/
+│   │   ├── GlobalBackdrop.tsx         # Static paper grid
+│   │   ├── DitheredImage.tsx          # Scroll-aware canvas plate
+│   │   ├── Work.tsx                   # Verified portfolio data and rendering
+│   │   └── …                          # Page sections and interaction primitives
+│   └── lib/
+│       ├── dither.ts                  # Ordered 8×8 Bayer renderer
+│       ├── gsap.ts                    # Scoped GSAP integration
+│       ├── splitText.ts               # Reversible text measurement wrappers
+│       ├── useLenis.ts                # Shared scroll clock and navigation helper
+│       └── usePrefersReducedMotion.ts # Reactive and imperative motion policy
 ├── packages/
-│   └── scroll-scrub-video/          # Standalone, publishable motion primitives
-│       ├── src/
-│       │   ├── ScrollScrubVideo.tsx # Scroll-position-driven video seeking
-│       │   ├── Reveal.tsx           # IntersectionObserver fade-and-lift wrapper
-│       │   ├── useScrollProgress.ts # Smoothed 0…1 scroll progress hook
-│       │   └── index.ts             # Public exports
-│       ├── README.md                # API reference and usage guide
-│       └── CHANGELOG.md
-├── tailwind.config.cjs              # Design tokens: fonts and the `page` color
-├── postcss.config.cjs               # Tailwind + Autoprefixer pipeline
-├── vite.config.ts                   # Vite + React plugin configuration
-├── tsconfig.json                    # TypeScript compiler options
-├── CONTRIBUTING.md                  # How to set up, what to work on, code style
-└── package.json
+│   └── scroll-scrub-video/            # Independent React motion package
+├── tailwind.config.cjs                # Design tokens and font families
+└── package.json                       # Root app and npm workspace
 ```
 
----
+## Editing safely
 
-## How it works
+- **Portfolio:** edit the typed records in `src/components/Work.tsx` and keep
+  image files under `public/work/`. Do not add a result, date, testimonial or
+  destination unless it can be sourced.
+- **Dither treatment:** change shared values in `DitheredImage.tsx` or the
+  renderer in `src/lib/dither.ts`; do not tune each client into a different
+  visual effect.
+- **Background:** `GlobalBackdrop.tsx` is a static page ground. It has no media
+  URL, decoder or scroll progress.
+- **Metadata:** title, descriptions, Open Graph, Twitter, JSON-LD and font
+  preloads are in `index.html`. All three social-image references point to
+  `public/qvo-share.jpg`.
+- **Typography:** preserve `font-stretch` for width. Do not collapse variable
+  axes into one `font-variation-settings` declaration.
+- **Content integrity:** never invent clients, testimonials, statistics, awards
+  or dates. If a claim has no source, remove it rather than styling around it.
 
-### The motion system
+## Deployment
 
-Lenis animates the window's real scroll position from the GSAP ticker, so native scroll events, CSS `sticky` and ScrollTrigger all stay in sync. Every scroll effect is a ScrollTrigger — scrubbed (showreel seek, statement brighten, parallax, horizontal process) or one-shot (split-text reveals, counters). `src/lib/gsap.ts` exposes a `useGsapContext` hook that scopes and reverts animations per component.
-
-### The 3D hero
-
-`Hero3D.tsx` is a vanilla Three.js scene in a `React.lazy` chunk: an icosahedron displaced by simplex noise in the vertex shader, shaded flat with screen-space derivative normals, a fresnel rim in the accent color, plus particle dust and a slow wireframe shell. It lerps toward the pointer, scales with the first viewport of scroll, clamps device-pixel ratio, pauses when off-screen or the tab is hidden, and renders a single static frame under reduced motion. A CSS radial gradient sits underneath as the loading and no-WebGL fallback.
-
-### The showreel
-
-A `280vh` section with a `position: sticky` viewport. A ScrollTrigger maps section progress onto the video's `currentTime` with the same throttle/min-delta/tail-trim tuning as the `scroll-scrub-video` package, including the iOS decoder-priming trick. Under reduced motion the video is replaced by the poster still.
-
-### Reveal on scroll
-
-Simple entrances still use the package's `Reveal` (`IntersectionObserver` fade-and-lift). The fancier text work — masked line reveals and the word-by-word statement — uses `src/lib/splitText.ts`, a dependency-free splitter that restores the original markup once each animation completes.
-
-### Page sections
-
-- **Preloader** — branded counter; the hero intro starts as the curtain lifts.
-- **Hero** — WebGL orb, split-line `Design that drives growth.` headline, magnetic CTAs.
-- **Showreel** — pinned scroll-scrubbed film.
-- **Work (`#work`)** — four case studies (placeholder copy, generated gradient art) with hover states and thumbnail parallax.
-- **Services (`#services`)** — sticky intro column beside three capability rows with deliverable tags.
-- **Process** — horizontal scroll through Discover / Design / Build / Launch on desktop; a vertical stack on mobile and under reduced motion.
-- **Studio (`#studio`)** — brightening statement, animated stats, portrait card, testimonials.
-- **Contact (`#contact`)** — giant split-reveal CTA with a magnetic “Book a call” button.
-- **Footer** — sitemap, package credit, outline watermark, back-to-top.
-
----
-
-## Customising
-
-- **Colors and type** — edit `theme.extend` in `tailwind.config.cjs`: the `page` and `accent` colors plus the display/serif/body font stacks set the whole mood.
-- **Copy and sections** — each section owns its content as plain arrays/strings at the top of its file: case studies in `src/components/Work.tsx`, services in `Services.tsx`, process steps in `Process.tsx`, stats/quotes/statement in `Studio.tsx`, marquee items in `App.tsx`. The case studies and testimonials ship as clearly-marked placeholders — swap them for real work.
-- **Showreel footage** — swap `VIDEO_URL` in `src/components/Showreel.tsx` and replace `public/hero-poster.jpg` with a matching first frame.
-- **3D scene** — tune `uAmp`/`uFreq` (displacement), colors, particle counts and rotation speeds in `src/components/Hero3D.tsx`.
-- **Motion feel** — Lenis `duration`/easing in `src/lib/useLenis.ts`; per-effect ScrollTrigger ranges live beside each component.
-- **Contact address** — the `mailto:` links point at `hello@qvo.tech`.
-- **Metadata** — page title, meta description, favicon, Open Graph/Twitter cards, JSON-LD structured data, and font loading are all in `index.html`. The crawler policy and sitemap live in `public/robots.txt` and `public/sitemap.xml`.
-
----
-
-## Roadmap
-
-- Publish `scroll-scrub-video` to npm
-- Hosted demo page for the package, independent of the QVO site
-- Replace placeholder case studies with real work and add project detail routes
-- Self-host all media in `public/` instead of referencing external CDNs
-- Performance budget: adaptive video quality and lazy-loaded media
-
----
+`npm run build` produces a static site in `dist/`. Before deployment, serve that
+folder with `npm run preview`, verify the social image resolves, scroll every
+plate through its coarse and fine states, and check reduced motion.
 
 ## Contributing
 
-Issues and pull requests are welcome. See [CONTRIBUTING.md](CONTRIBUTING.md) for setup, the kinds of help that are most useful, code style, and pull request expectations.
-
-Good first areas: accessibility passes, mobile browser quirks, performance on low-end devices, documentation, and features from the package roadmap.
-
----
+See [`CONTRIBUTING.md`](CONTRIBUTING.md). Keep changes focused, explain why they
+exist, and include visual evidence for visual work.
 
 ## License
 
-MIT — see [LICENSE](LICENSE) for details.
-
----
+MIT — see [`LICENSE`](LICENSE).
 
 ## Contact
 
-Maintained as the public codebase of the QVO web design studio.
-
 - Site: [qvo.tech](https://qvo.tech)
-- Email: hello@qvo.tech
+- Email: [hello@qvo.tech](mailto:hello@qvo.tech)
