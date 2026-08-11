@@ -1,6 +1,6 @@
 ---
 name: Bug report
-about: Report a reproducible problem with the site or package
+about: Report a reproducible problem with the site
 title: "[Bug]: "
 labels: bug
 assignees: ""
@@ -8,7 +8,7 @@ assignees: ""
 
 ## What happened?
 
-Describe the problem clearly and include the affected page, component, or package export.
+Describe the problem clearly and include the affected page or component.
 
 ## Steps to reproduce
 
@@ -29,9 +29,8 @@ What happened instead?
 - Browser and version:
 - Operating system and device:
 - Viewport size:
-- Package version, if applicable:
 
-## Scroll or video details
+## Scroll or motion details
 
 For motion issues, say whether this occurs on iOS Safari, Android Chrome, or desktop, and whether reduced motion is enabled.
 
