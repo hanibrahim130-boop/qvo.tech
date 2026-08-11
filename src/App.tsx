@@ -1,34 +1,17 @@
-import { useEffect, useState } from 'react'
+import { useEffect } from 'react'
 import Contact from './components/Contact'
-import Cursor from './components/Cursor'
 import Footer from './components/Footer'
-import Hero from './components/Hero'
-import Marquee from './components/Marquee'
 import Navbar from './components/Navbar'
-import Preloader from './components/Preloader'
-import Process from './components/Process'
 import Services from './components/Services'
-import Showreel from './components/Showreel'
 import Studio from './components/Studio'
 import Work from './components/Work'
 import { ScrollTrigger } from './lib/gsap'
 import { useLenis } from './lib/useLenis'
 
-const MARQUEE_ITEMS = [
-  'Web design',
-  'Web development',
-  'Digital strategy',
-  'Brand systems',
-  'Motion & 3D',
-]
-
 export default function App() {
-  const [started, setStarted] = useState(false)
-
   useLenis()
 
-  // Re-measure scroll choreography once fonts and the full page have loaded,
-  // and again when the preloader hands off.
+  // Re-measure scroll choreography once fonts and the full page have loaded.
   useEffect(() => {
     const refresh = () => ScrollTrigger.refresh()
     document.fonts.ready.then(refresh).catch(() => {})
@@ -36,23 +19,12 @@ export default function App() {
     return () => window.removeEventListener('load', refresh)
   }, [])
 
-  useEffect(() => {
-    if (started) ScrollTrigger.refresh()
-  }, [started])
-
   return (
     <>
-      <Preloader onComplete={() => setStarted(true)} />
-      <Cursor />
-      <div className="noise-overlay" aria-hidden="true" />
       <Navbar />
       <main>
-        <Hero started={started} />
-        <Marquee items={MARQUEE_ITEMS} />
-        <Showreel />
         <Work />
         <Services />
-        <Process />
         <Studio />
         <Contact />
       </main>

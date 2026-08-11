@@ -6,25 +6,16 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 ## [Unreleased]
 
-### Added
-
-- Redesigned the site as a premium single-page experience: branded preloader, generative Three.js hero (noise-displaced orb, particles, shaders), pinned scroll-scrubbed showreel, case-study section, capability rows, horizontal-scroll process, studio section with animated stats and testimonials, giant CTA and a full footer.
-- Added GSAP 3 + ScrollTrigger scroll choreography (split-text reveals, word-by-word statement brighten, counters, parallax) and Lenis smooth scrolling wired to the GSAP ticker.
-- Added micro-interactions: custom blend-mode cursor, magnetic buttons, hide-on-scroll navbar with a full-screen staggered mobile menu, and an infinite service marquee.
-- Added Space Grotesk display and Instrument Serif accent typography plus the `#D9FF3F` accent design token.
-- Extracted the reusable scroll-driven video and reveal primitives into the `scroll-scrub-video` workspace package.
-- Added workspace wiring so the QVO site consumes `ScrollScrubVideo` and `Reveal` from that package.
-- Added npm publishing metadata, ESM/CJS builds, and TypeScript declarations for `scroll-scrub-video`.
-- Added CI, issue templates, and a pull request checklist for reliable contributions and releases.
-- Added an SEO layer: meta description, canonical URL, Open Graph and Twitter card tags, JSON-LD structured data, `robots.txt`, and `sitemap.xml`.
-
 ### Changed
 
-- Replaced the whole-page background video scrub with a dedicated pinned showreel section; the package's `Reveal` still powers section entrances, and every effect honours `prefers-reduced-motion`.
-- The Three.js scene ships in a lazy-loaded chunk so the initial bundle stays lean.
-- Self-hosted the studio consultation image as an optimized WebP asset instead of hotlinking the image CDN.
+- Replaced the previous template-style presentation with a client-first portfolio: the site now leads with six real client screenshots (`public/work/`) in a GSAP ScrollTrigger + Lenis scroll sequence on desktop and a smooth stacked layout on mobile.
+- Removed the generative WebGL hero, the external scroll-scrubbed showreel video, the preloader, the marquee, the custom cursor, the placeholder case-study content, stats, client quotes, invented dates and booking-quarter claims.
+- Reworked the lower page into a restrained, factual set of sections: web design / development / strategy services, an independent-studio line, `hello@qvo.tech` contact, and GitHub.
+- Switched typography to the Archivo variable font (`@fontsource-variable/archivo@5.3.0`) self-hosted with a `format('woff2')` `@font-face`; removed Google Fonts links and preconnects.
+- Removed the `scroll-scrub-video` workspace package and its wiring (workspaces, Vite alias, tsconfig paths, CI package build step).
+- Removed the Three.js hero, the showreel and related dead assets (`hero-poster.jpg`, `studio-portrait.webp`) and dependencies (`three`, `@types/three`, `lucide-react`).
+- Added a `prefers-reduced-motion` React branch that renders a single plain stacked work list with no pinning; no animation branch is hidden with CSS.
 
 ### Fixed
 
-- Replaced the broken `/vite.svg` favicon reference with a self-hosted hexagon `favicon.svg` that matches the navbar logo.
-- Regenerated `package-lock.json` so TypeScript's per-platform native compiler binaries resolve on every OS, fixing `npm ci && npm run build` on fresh checkouts.
+- Regenerated `package-lock.json` for the trimmed dependency set so `npm ci` and `npm run build` resolve cleanly on fresh checkouts.

@@ -1,11 +1,7 @@
 # Contributing to QVO
 
-Thanks for taking the time to contribute. This repository contains two things:
-
-- the **website** for [qvo.tech](https://qvo.tech), at the repository root, and
-- **`packages/scroll-scrub-video`**, the reusable scroll-driven motion primitives extracted from it.
-
-Contributions to either are welcome.
+Thanks for taking the time to contribute. This repository contains the public website for
+[qvo.tech](https://qvo.tech).
 
 ## Getting set up
 
@@ -22,19 +18,12 @@ Before opening a pull request:
 npm run build   # type-checks the site and produces a production bundle
 ```
 
-For package work, build and type-check it from the workspace root:
-
-```bash
-npm run build -w scroll-scrub-video
-```
-
 ## Ways to help
 
-- **Bugs** — open an issue with the browser, device, and steps to reproduce. Scroll and video behaviour is very platform-dependent, so please say whether you saw it on iOS Safari, Android Chrome, or desktop.
+- **Bugs** — open an issue with the browser, device, and steps to reproduce. Scroll behaviour is platform-dependent, so please say whether you saw it on iOS Safari, Android Chrome, or desktop.
 - **Accessibility** — reduced-motion handling, focus order, contrast, and screen-reader behaviour are all fair game.
 - **Performance** — smoother scrubbing on low-end devices, smaller media payloads, faster first paint.
 - **Documentation** — clearer setup steps, better examples, or a demo others can point at.
-- **Package features** — see the roadmap in `packages/scroll-scrub-video/README.md`.
 
 ## Pull requests
 
@@ -48,8 +37,7 @@ npm run build -w scroll-scrub-video
 
 - TypeScript with `strict` mode. Avoid `any`; prefer narrowing.
 - **Site code**: Tailwind utility classes. Avoid adding new CSS files.
-- **Package code**: no Tailwind and no CSS imports. The primitives must stay usable in any React project, so styling belongs in inline styles or consumer-supplied `className`/`style` props.
-- Avoid new runtime dependencies unless there is no reasonable alternative. The package's only peer dependency is React.
+- Avoid new runtime dependencies unless there is no reasonable alternative.
 - Clean up event listeners, observers, timers, and animation frames in every `useEffect` teardown.
 - Respect `prefers-reduced-motion` in anything that animates.
 
@@ -58,9 +46,9 @@ npm run build -w scroll-scrub-video
 Conventional Commits are preferred, for example:
 
 ```
-feat(scroll-scrub-video): add image-sequence source
-fix: hold the first video frame on iOS when autoplay is blocked
-docs: clarify keyframe encoding guidance
+feat: add a project detail route
+fix: preserve the first work panel on iOS
+docs: clarify screenshot requirements
 ```
 
 ## License

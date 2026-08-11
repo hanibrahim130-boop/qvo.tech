@@ -1,5 +1,5 @@
 import type { ReactNode } from 'react'
-import { Reveal } from 'scroll-scrub-video'
+import Reveal from './Reveal'
 
 interface SectionHeadProps {
   index: string
@@ -20,7 +20,7 @@ export default function SectionHead({ index, label, title, className }: SectionH
         </div>
       </Reveal>
       <Reveal delay={120}>
-        <h2 className="mt-6 max-w-4xl font-display text-[clamp(2.5rem,6vw,5rem)] font-medium leading-[1.02] tracking-tight text-white">
+        <h2 className="mt-6 max-w-4xl font-wide font-display text-[clamp(2.5rem,6vw,4.5rem)] font-semibold leading-[0.98] tracking-tight text-white">
           {title}
         </h2>
       </Reveal>

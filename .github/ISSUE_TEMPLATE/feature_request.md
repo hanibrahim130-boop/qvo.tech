@@ -1,6 +1,6 @@
 ---
 name: Feature request
-about: Suggest an improvement to the site or package
+about: Suggest an improvement to the site
 title: "[Feature]: "
 labels: enhancement
 assignees: ""
