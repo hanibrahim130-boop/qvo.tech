@@ -32,6 +32,3 @@ jobs:
 
       - name: Build site
         run: npm run build
-
-      - name: Build package
-        run: npm run build -w scroll-scrub-video

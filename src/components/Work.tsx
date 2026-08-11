@@ -1,165 +1,278 @@
-import { useRef } from 'react'
-import { ArrowUpRight, Hexagon } from 'lucide-react'
-import { Reveal } from 'scroll-scrub-video'
-import { gsap, useGsapContext } from '../lib/gsap'
+import { useLayoutEffect, useRef } from 'react'
+import { gsap } from '../lib/gsap'
+import { onAnchorClick } from '../lib/anchors'
 import { usePrefersReducedMotion } from '../lib/usePrefersReducedMotion'
-import SectionHead from './SectionHead'
 
-/**
- * Placeholder case studies — swap for real projects as they ship. The
- * thumbnails are generated gradient art so the repo needs no image assets.
- */
-const CASES = [
+interface WorkItem {
+  id: string
+  client: string
+  detail?: string
+  file: string
+  width: number
+  height: number
+}
+
+const WORK: WorkItem[] = [
   {
-    client: 'Aurelia Watches',
-    sector: 'E-commerce',
-    year: '2026',
-    title: 'A flagship digital boutique for a Swiss micro-brand',
-    result: '+212% online revenue in one quarter',
-    monogram: 'A',
-    art: 'radial-gradient(120% 140% at 20% 10%, #2c3818 0%, #11130a 45%, #0a0a0a 100%)',
+    id: 'white',
+    client: 'WHITE Real Estate Group',
+    file: '/work/white.webp',
+    width: 1600,
+    height: 711,
   },
   {
-    client: 'Nimbus Analytics',
-    sector: 'SaaS',
-    year: '2025',
-    title: 'Turning a dense data platform into a clear story',
-    result: '2.4× demo requests after relaunch',
-    monogram: 'N',
-    art: 'radial-gradient(130% 120% at 80% 15%, #1b2a33 0%, #0d1216 50%, #0a0a0a 100%)',
+    id: 'brandi',
+    client: 'brandi intl',
+    file: '/work/brandi.webp',
+    width: 1600,
+    height: 716,
   },
   {
-    client: 'Studio Form',
-    sector: 'Architecture',
-    year: '2025',
-    title: 'A portfolio as considered as the buildings',
-    result: 'Shortlisted, Awwwards SOTD',
-    monogram: 'F',
-    art: 'radial-gradient(120% 130% at 30% 85%, #33241b 0%, #16100c 50%, #0a0a0a 100%)',
+    id: 'ferri',
+    client: 'FERRI',
+    detail: 'Furniture house since 1959 · Tripoli',
+    file: '/work/ferri.webp',
+    width: 1600,
+    height: 723,
   },
   {
-    client: 'Volta Mobility',
-    sector: 'Automotive',
-    year: '2024',
-    title: 'Launching an EV startup with cinematic 3D',
-    result: '38k waitlist signups at launch',
-    monogram: 'V',
-    art: 'radial-gradient(140% 120% at 75% 80%, #24182e 0%, #100b14 50%, #0a0a0a 100%)',
+    id: 'cityu',
+    client: 'City University',
+    detail: 'Tripoli',
+    file: '/work/cityu.webp',
+    width: 1600,
+    height: 731,
+  },
+  {
+    id: 'mofa',
+    client: 'Mofa Boutique',
+    detail: 'Saida',
+    file: '/work/mofa.webp',
+    width: 1600,
+    height: 730,
+  },
+  {
+    id: 'mouttahed',
+    client: 'Mouttahed Basketball Academy',
+    detail: 'Tripoli',
+    file: '/work/mouttahed.webp',
+    width: 1600,
+    height: 725,
   },
 ]
 
-export default function Work() {
-  const sectionRef = useRef<HTMLElement>(null)
-  const reduced = usePrefersReducedMotion()
+interface PanelProps {
+  item: WorkItem
+  index: number
+  first: boolean
+}
 
-  // Gentle parallax on each thumbnail as it crosses the viewport.
-  useGsapContext(
-    () => {
-      if (reduced) return
-      gsap.utils.toArray<HTMLElement>('[data-work-thumb]').forEach((thumb) => {
-        gsap.fromTo(
-          thumb,
-          { yPercent: 6 },
-          {
-            yPercent: -6,
-            ease: 'none',
-            scrollTrigger: {
-              trigger: thumb,
-              start: 'top bottom',
-              end: 'bottom top',
-              scrub: true,
-            },
-          },
-        )
-      })
-    },
-    sectionRef,
-    [reduced],
+function Panel({ item, index, first }: PanelProps) {
+  return (
+    <div className="relative flex h-[100svh] w-full items-center justify-center px-5 sm:px-8 md:px-12">
+      <div className="w-full max-w-[1180px]">
+        <div className="flex items-center justify-between font-mono text-[11px] uppercase tracking-[0.25em] text-white/50">
+          <span className="text-accent">0{index + 1}</span>
+          <span>{WORK.length} projects</span>
+        </div>
+
+        <div className="mt-3 overflow-hidden rounded-md border border-white/10 bg-panel">
+          <img
+            src={item.file}
+            alt={`${item.client} website`}
+            width={item.width}
+            height={item.height}
+            loading={index === 0 ? 'eager' : 'lazy'}
+            fetchPriority={index === 0 ? 'high' : 'auto'}
+            decoding="async"
+            className="h-auto w-full"
+          />
+        </div>
+
+        <div className="mt-5 flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
+          <div className="min-w-0">
+            <h2 className="font-wide font-display text-[clamp(1.9rem,5vw,3.75rem)] font-semibold leading-[0.98] tracking-tight text-white">
+              {item.client}
+            </h2>
+            {item.detail && (
+              <p className="mt-2 text-sm text-white/55 sm:text-base">{item.detail}</p>
+            )}
+          </div>
+          <a
+            href={`mailto:hello@qvo.tech?subject=${encodeURIComponent(item.client)}`}
+            className="inline-flex w-max items-center gap-1.5 text-sm text-white/75 hover:text-accent"
+          >
+            Enquire
+            <span aria-hidden="true">→</span>
+          </a>
+        </div>
+
+        {first && (
+          <div className="mt-8 flex flex-col gap-4 border-t border-white/10 pt-5 sm:flex-row sm:items-center sm:justify-between">
+            <p className="text-sm text-white/60">
+              QVO is an independent web design studio in Lebanon.
+            </p>
+            <a
+              href="#services"
+              onClick={onAnchorClick}
+              className="inline-flex items-center gap-2 font-mono text-[11px] uppercase tracking-[0.25em] text-white/60 hover:text-accent"
+            >
+              Scroll to explore
+              <span aria-hidden="true">↓</span>
+            </a>
+          </div>
+        )}
+      </div>
+    </div>
   )
+}
+
+/**
+ * Desktop: the six projects scroll as one continuous pinned sequence — the
+ * section is six screens tall and the sticky viewport slides the track upward
+ * on a scrubbed ScrollTrigger (transform only). Mobile: the same panels stack
+ * naturally, full-screen, with no pinning.
+ */
+function WorkMotion() {
+  const wrapRef = useRef<HTMLElement>(null)
+  const viewportRef = useRef<HTMLDivElement>(null)
+  const trackRef = useRef<HTMLDivElement>(null)
+  const progressRef = useRef<HTMLDivElement>(null)
+  const indexRef = useRef<HTMLSpanElement>(null)
+
+  useLayoutEffect(() => {
+    const wrap = wrapRef.current
+    const viewport = viewportRef.current
+    const track = trackRef.current
+    if (!wrap || !viewport || !track) return
+
+    const mm = gsap.matchMedia()
+    mm.add('(min-width: 768px)', () => {
+      gsap.to(track, {
+        y: () => -(track.scrollHeight - viewport.clientHeight),
+        ease: 'none',
+        scrollTrigger: {
+          trigger: wrap,
+          start: 'top top',
+          end: 'bottom bottom',
+          scrub: true,
+          invalidateOnRefresh: true,
+          onUpdate: (self) => {
+            if (progressRef.current) {
+              progressRef.current.style.transform = `scaleY(${self.progress})`
+            }
+            if (indexRef.current) {
+              const n = Math.min(
+                WORK.length,
+                Math.round(self.progress * (WORK.length - 1)) + 1,
+              )
+              indexRef.current.textContent = String(n).padStart(2, '0')
+            }
+          },
+        },
+      })
+    })
+
+    return () => mm.revert()
+  }, [])
 
   return (
-    <section ref={sectionRef} id="work" className="px-5 py-28 sm:px-8 md:px-12 md:py-36">
-      <div className="flex flex-col gap-6 md:flex-row md:items-end md:justify-between">
-        <SectionHead
-          index="01"
-          label="Selected work"
-          title={
-            <>
-              Work that <em className="font-serif font-normal italic text-accent">works.</em>
-            </>
-          }
+    <section ref={wrapRef} id="work" aria-label="Selected work" className="relative md:h-[600svh]">
+      <h1 className="sr-only">
+        QVO — independent web design studio in Lebanon. Selected client work.
+      </h1>
+
+      <div
+        ref={viewportRef}
+        className="relative md:sticky md:top-0 md:h-screen md:overflow-hidden"
+      >
+        <div ref={trackRef} className="relative flex flex-col">
+          {WORK.map((item, i) => (
+            <Panel key={item.id} item={item} index={i} first={i === 0} />
+          ))}
+        </div>
+
+        <div
+          aria-hidden="true"
+          className="pointer-events-none absolute bottom-6 right-6 hidden font-mono text-[11px] uppercase tracking-[0.25em] text-white/50 md:block"
+        >
+          <span ref={indexRef} className="text-white/80">
+            01
+          </span>
+          <span> / {WORK.length}</span>
+        </div>
+      </div>
+
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute bottom-0 left-0 top-0 hidden w-px bg-white/10 md:block"
+      >
+        <div
+          ref={progressRef}
+          className="h-full w-full origin-top bg-accent"
+          style={{ transform: 'scaleY(0)' }}
         />
-        <Reveal delay={200}>
-          <p className="max-w-xs text-sm leading-relaxed text-white/55">
-            Four engagements, four sectors — the same obsession with clarity, craft and
-            measurable outcomes.
-          </p>
-        </Reveal>
       </div>
-
-      <div className="mt-16 flex flex-col gap-20 md:gap-28">
-        {CASES.map((project, i) => (
-          <Reveal key={project.client} threshold={0.1}>
-            <a
-              href={`mailto:hello@qvo.tech?subject=Case study — ${project.client}`}
-              data-cursor="view"
-              className={`group flex flex-col gap-6 md:items-center md:gap-12 ${
-                i % 2 === 1 ? 'md:flex-row-reverse' : 'md:flex-row'
-              }`}
-            >
-              <div className="relative w-full overflow-hidden rounded-2xl border border-white/10 md:w-7/12">
-                <div
-                  data-work-thumb
-                  className="relative aspect-[16/11] w-full scale-[1.06] transition-transform duration-700 ease-out group-hover:scale-[1.12]"
-                  style={{ backgroundImage: project.art }}
-                >
-                  <span
-                    aria-hidden="true"
-                    className="absolute inset-0 flex items-center justify-center font-serif text-[10rem] italic leading-none text-white/10 sm:text-[13rem]"
-                  >
-                    {project.monogram}
-                  </span>
-                  <Hexagon
-                    aria-hidden="true"
-                    size={20}
-                    strokeWidth={1.5}
-                    className="absolute left-5 top-5 text-white/30"
-                  />
-                  <span className="absolute bottom-5 right-5 font-mono text-[10px] uppercase tracking-[0.2em] text-white/40">
-                    {project.client} — {project.year}
-                  </span>
-                </div>
-              </div>
-
-              <div className="md:w-5/12">
-                <div className="flex items-center gap-4 font-mono text-[11px] uppercase tracking-[0.2em] text-white/45">
-                  <span className="text-accent">0{i + 1}</span>
-                  <span>{project.sector}</span>
-                  <span aria-hidden="true">·</span>
-                  <span>{project.year}</span>
-                </div>
-                <h3 className="mt-4 max-w-md font-display text-2xl font-medium leading-snug tracking-tight text-white sm:text-3xl">
-                  {project.title}
-                </h3>
-                <p className="mt-3 text-sm text-white/55">{project.result}</p>
-                <span className="mt-6 inline-flex items-center gap-1.5 text-sm text-white/75 transition-colors duration-300 group-hover:text-accent">
-                  View case study
-                  <ArrowUpRight
-                    size={15}
-                    className="transition-transform duration-300 group-hover:-translate-y-0.5 group-hover:translate-x-0.5"
-                  />
-                </span>
-              </div>
-            </a>
-          </Reveal>
-        ))}
-      </div>
-
-      <Reveal delay={100}>
-        <p className="mt-20 border-t border-white/10 pt-6 font-mono text-[11px] uppercase tracking-[0.2em] text-white/40">
-          Full case studies available on request — hello@qvo.tech
-        </p>
-      </Reveal>
     </section>
   )
+}
+
+/**
+ * Reduced motion: a plain, stacked list of the real work. No pin, no scrub,
+ * no transforms — this branch is the only one rendered when the visitor asks
+ * for reduced motion.
+ */
+function WorkReduced() {
+  return (
+    <section
+      id="work"
+      aria-label="Selected work"
+      className="mx-auto max-w-[1600px] px-5 pt-28 sm:px-8 md:px-12 md:pt-32"
+    >
+      <h1 className="font-wide font-display text-[clamp(2.5rem,6vw,4.5rem)] font-semibold leading-[0.98] tracking-tight text-white">
+        Selected work
+      </h1>
+      <p className="mt-4 max-w-xl text-sm leading-relaxed text-white/60 sm:text-base">
+        QVO is an independent web design studio in Lebanon. Recent client work:
+      </p>
+
+      <ol className="mt-14 flex flex-col">
+        {WORK.map((item, i) => (
+          <li
+            key={item.id}
+            className="grid gap-5 border-t border-white/10 py-10 md:grid-cols-12 md:gap-10 md:py-14"
+          >
+            <div className="md:col-span-8">
+              <img
+                src={item.file}
+                alt={`${item.client} website`}
+                width={item.width}
+                height={item.height}
+                loading={i === 0 ? 'eager' : 'lazy'}
+                fetchPriority={i === 0 ? 'high' : 'auto'}
+                decoding="async"
+                className="h-auto w-full rounded-md border border-white/10"
+              />
+            </div>
+            <div className="flex flex-col justify-center md:col-span-4">
+              <span className="font-mono text-xs uppercase tracking-[0.2em] text-accent">
+                0{i + 1}
+              </span>
+              <h2 className="mt-2 font-wide font-display text-3xl font-semibold tracking-tight text-white">
+                {item.client}
+              </h2>
+              {item.detail && (
+                <p className="mt-2 text-sm text-white/55">{item.detail}</p>
+              )}
+            </div>
+          </li>
+        ))}
+      </ol>
+    </section>
+  )
+}
+
+export default function Work() {
+  const reduced = usePrefersReducedMotion()
+  return reduced ? <WorkReduced /> : <WorkMotion />
 }

@@ -2,10 +2,22 @@
 @tailwind components;
 @tailwind utilities;
 
+@font-face {
+  font-family: 'Archivo';
+  font-style: normal;
+  font-display: swap;
+  font-weight: 100 900;
+  font-stretch: 62% 125%;
+  src: url('../node_modules/@fontsource-variable/archivo/files/archivo-latin-standard-normal.woff2')
+    format('woff2');
+}
+
 :root {
-  font-family: Inter, system-ui, sans-serif;
-  color: #fff;
+  font-family: Archivo, system-ui, sans-serif;
+  color: #f2f2f2;
   background: #0a0a0a;
+  color-scheme: dark;
+  scrollbar-color: #2a2a2e #0a0a0a;
   font-synthesis: none;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
@@ -26,11 +38,11 @@ body,
 body {
   min-height: 100vh;
   background: #0a0a0a;
+  color: #f2f2f2;
   overflow-x: clip;
 }
 
-/* Scroll is locked while the preloader or the mobile menu is on screen. */
-html.is-loading,
+/* Scroll is locked while the mobile menu is on screen. */
 html.menu-open {
   overflow: hidden;
 }
@@ -76,53 +88,12 @@ html.lenis body {
   overflow: hidden;
 }
 
-/* Filmic grain laid over the whole page. */
-.noise-overlay {
-  position: fixed;
-  inset: 0;
-  z-index: 90;
-  pointer-events: none;
-  opacity: 0.05;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
-  background-size: 180px 180px;
-}
-
-/* Big hollow display type. */
-.text-outline {
-  color: transparent;
-  -webkit-text-stroke: 1px rgba(255, 255, 255, 0.22);
-}
-
-/* Split-text helpers: lines act as masks, words slide inside them. */
-.split-line {
-  display: block;
-  overflow: hidden;
-}
-.split-word {
-  display: inline-block;
-  will-change: transform;
-}
-
-/* Navbar once the page has been scrolled. */
-.nav-scrolled {
-  background: rgba(10, 10, 10, 0.6);
-  border-color: rgba(255, 255, 255, 0.1);
-  backdrop-filter: blur(14px);
-  -webkit-backdrop-filter: blur(14px);
-}
-
-/* The custom cursor replaces the native one on precise pointers only. */
-@media (pointer: fine) {
-  html.has-custom-cursor,
-  html.has-custom-cursor * {
-    cursor: none !important;
-  }
+/* Display type widths, driven with CSS font-stretch on the variable face. */
+.font-wide {
+  font-stretch: 112%;
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .animate-marquee {
-    animation: none;
-  }
   html {
     scroll-behavior: auto;
   }
