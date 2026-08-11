@@ -186,7 +186,7 @@ function WorkMotion() {
         ref={viewportRef}
         className="relative md:sticky md:top-0 md:h-screen md:overflow-hidden"
       >
-        <div ref={trackRef} className="relative flex flex-col">
+        <div ref={trackRef} className="relative flex flex-col will-change-transform">
           {WORK.map((item, i) => (
             <Panel key={item.id} item={item} index={i} first={i === 0} />
           ))}
@@ -209,7 +209,7 @@ function WorkMotion() {
       >
         <div
           ref={progressRef}
-          className="h-full w-full origin-top bg-accent"
+          className="h-full w-full origin-top bg-accent will-change-transform"
           style={{ transform: 'scaleY(0)' }}
         />
       </div>
