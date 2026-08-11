@@ -24,7 +24,7 @@ All animation runs on GSAP + Lenis and only ever animates `transform`, `opacity`
 
 ### Prerequisites
 
-- Node.js 18 or newer
+- Node.js 22.12 or newer
 - npm
 
 ### Install and run
