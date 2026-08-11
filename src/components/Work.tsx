@@ -69,7 +69,7 @@ interface PanelProps {
 
 function Panel({ item, index, first }: PanelProps) {
   return (
-    <div className="relative flex h-[100svh] w-full items-center justify-center px-5 sm:px-8 md:px-12">
+    <div className="relative flex min-h-[72svh] w-full items-center justify-center px-5 py-20 sm:px-8 md:h-[100svh] md:min-h-0 md:px-12 md:py-0">
       <div className="w-full max-w-[1180px]">
         <div className="flex items-center justify-between font-mono text-[11px] uppercase tracking-[0.25em] text-white/50">
           <span className="text-accent">0{index + 1}</span>
