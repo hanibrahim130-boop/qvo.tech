@@ -4,6 +4,7 @@ node_modules/
 # Build and verification artifacts
 dist/
 output/
+.playwright-cli/
 packages/*/dist/
 *.js
 
