@@ -3,10 +3,10 @@ import CinematicExperience from './components/CinematicExperience'
 import ContactFooter from './components/ContactFooter'
 import Header from './components/Header'
 import StaticExperience from './components/StaticExperience'
-import { usePrefersReducedMotion } from './lib/usePrefersReducedMotion'
+import { useStaticExperience } from './lib/useStaticExperience'
 
 export default function App() {
-  const reduceMotion = usePrefersReducedMotion()
+  const staticExperience = useStaticExperience()
 
   return (
     <MotionConfig reducedMotion="user">
@@ -15,7 +15,7 @@ export default function App() {
       </a>
       <Header />
       <main id="main-content">
-        {reduceMotion ? <StaticExperience /> : <CinematicExperience />}
+        {staticExperience ? <StaticExperience /> : <CinematicExperience />}
         <ContactFooter />
       </main>
     </MotionConfig>
