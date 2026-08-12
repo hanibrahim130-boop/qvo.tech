@@ -9,20 +9,17 @@ if (typeof window !== 'undefined') {
 
 export { gsap, ScrollTrigger }
 
-/**
- * Runs a GSAP setup function inside `gsap.context`, scoped to `scope`, and
- * reverts every tween/ScrollTrigger it created on cleanup. Selector text used
- * inside the callback resolves within the scope element.
- */
 export function useGsapContext(
-  setup: (ctx: gsap.Context) => void,
+  setup: () => void,
   scope: RefObject<HTMLElement | null>,
-  deps: readonly unknown[] = [],
+  dependencies: readonly unknown[] = [],
 ) {
   useLayoutEffect(() => {
     if (!scope.current) return
-    const ctx = gsap.context(setup, scope)
-    return () => ctx.revert()
+
+    const context = gsap.context(setup, scope)
+    return () => context.revert()
+    // The caller owns the dependency list, matching React's effect API.
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, deps)
+  }, dependencies)
 }

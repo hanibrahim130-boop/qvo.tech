@@ -1,9 +1,11 @@
-```
 # Dependencies
 node_modules/
 
-# Build artifacts
+# Build and verification artifacts
 dist/
+output/
+.playwright-cli/
+packages/*/dist/
 *.js
 
 # Environment
@@ -12,14 +14,10 @@ dist/
 # Logs
 *.log
 
-# Editor/IDE
+# Editor / OS
 .vscode/
 .idea/
 *.swp
 *.swo
-
-# OS
 .DS_Store
 Thumbs.db
-
-```
